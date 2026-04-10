@@ -1710,24 +1710,27 @@
       </div>
 
       <div class="contact-form-box">
-        <form onsubmit="handleContact(event)">
+        <form id="contactForm" onsubmit="handleContact(event)">
+          <input type="hidden" name="_subject" value="New enquiry from dorvin.in" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
           <div class="form-row">
             <div class="form-group">
               <label for="fname">First name</label>
-              <input type="text" id="fname" placeholder="John" required />
+              <input type="text" id="fname" name="First Name" placeholder="John" required />
             </div>
             <div class="form-group">
               <label for="lname">Last name</label>
-              <input type="text" id="lname" placeholder="Doe" required />
+              <input type="text" id="lname" name="Last Name" placeholder="Doe" required />
             </div>
           </div>
           <div class="form-group">
             <label for="email">Work email</label>
-            <input type="email" id="email" placeholder="john@company.com" required />
+            <input type="email" id="email" name="Email" placeholder="john@company.com" required />
           </div>
           <div class="form-group">
             <label for="service">Service you're interested in</label>
-            <select id="service">
+            <select id="service" name="Service">
               <option value="">Select a service...</option>
               <option>Full-Stack Development</option>
               <option>Custom Software Development</option>
@@ -1743,7 +1746,7 @@
           </div>
           <div class="form-group">
             <label for="message">Tell us about your project</label>
-            <textarea id="message" placeholder="Briefly describe what you're looking to build or solve..." required></textarea>
+            <textarea id="message" name="Message" placeholder="Briefly describe what you're looking to build or solve..." required></textarea>
           </div>
           <button type="submit" class="btn-primary">Send message</button>
         </form>
@@ -1780,13 +1783,32 @@
       window.scrollTo({ top, behavior: 'smooth' });
     });
 
-    function handleContact(e) {
+    async function handleContact(e) {
       e.preventDefault();
-      const btn = e.target.querySelector('button');
-      btn.textContent = 'Message sent!';
-      btn.style.background = '#22c55e';
+      const form = e.target;
+      const btn = form.querySelector('button');
+      btn.textContent = 'Sending…';
       btn.disabled = true;
-      e.target.querySelectorAll('input, textarea, select').forEach(el => el.disabled = true);
+
+      try {
+        const res = await fetch('https://formsubmit.co/ajax/ceo@dorvin.in', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+        const json = await res.json();
+        if (json.success === 'true' || json.success === true) {
+          btn.textContent = 'Message sent!';
+          btn.style.background = '#22c55e';
+          form.querySelectorAll('input, textarea, select').forEach(el => el.disabled = true);
+        } else {
+          throw new Error('Failed');
+        }
+      } catch {
+        btn.textContent = 'Failed — please try again';
+        btn.style.background = '#ef4444';
+        btn.disabled = false;
+      }
     }
 
     // Hero canvas particles
