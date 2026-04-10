@@ -1,0 +1,7 @@
+.DS_Store
+._*
+._.git
+._.claude
+Thumbs.db
+*.log
+.claude/
