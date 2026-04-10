@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dorvin.in/sitemap.xml
