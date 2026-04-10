@@ -1268,6 +1268,270 @@
       .about-values { grid-template-columns: 1fr; }
       footer { flex-direction: column; align-items: flex-start; }
     }
+
+    /* ── PRODUCTS SECTION ── */
+    .products-section {
+      padding: 7rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .products-section .section-label { margin-bottom: 0.75rem; }
+    .products-section .section-title { margin-bottom: 1rem; }
+    .products-section > p {
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 3.5rem;
+    }
+
+    .product-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      transition: box-shadow 0.3s, border-color 0.3s;
+    }
+
+    .product-card:hover {
+      border-color: rgba(37,99,235,0.45);
+      box-shadow: 0 24px 60px rgba(37,99,235,0.12);
+    }
+
+    .product-card-content {
+      padding: 3rem 3rem 3rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .product-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(37,99,235,0.25);
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--accent-light);
+      width: fit-content;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 6px #22c55e;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .product-name {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 0.35rem;
+    }
+
+    .product-name span {
+      background: linear-gradient(135deg, var(--accent), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .product-tamil {
+      font-size: 1rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .product-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.75;
+    }
+
+    .product-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .product-pill {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    [data-theme="light"] .product-pill { background: rgba(0,0,0,0.03); }
+
+    .product-pill-icon { font-size: 0.85rem; }
+
+    .product-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: rgba(37,99,235,0.05);
+      border: 1px solid rgba(37,99,235,0.12);
+      border-radius: 14px;
+    }
+
+    .product-stat { text-align: center; }
+
+    .product-stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .product-stat-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .product-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .product-btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+
+    .product-btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+
+    .product-btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    .product-card-visual {
+      background: linear-gradient(145deg, rgba(37,99,235,0.08) 0%, rgba(14,165,233,0.06) 100%);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem;
+      gap: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card-visual::before {
+      content: '';
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .product-tool-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .product-tool-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .product-tool-item:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-2px); }
+
+    .product-tool-emoji { font-size: 1.4rem; margin-bottom: 0.3rem; }
+
+    .product-tool-name {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .product-trust {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .product-trust-stars { color: #f59e0b; letter-spacing: -1px; }
+
+    @media (max-width: 768px) {
+      .product-card { grid-template-columns: 1fr; }
+      .product-card-visual { border-left: none; border-top: 1px solid var(--border); }
+      .product-card-content { padding: 2rem; }
+    }
   </style>
 </head>
 <body>
@@ -1279,6 +1543,7 @@
       <li><a href="#about">About Us</a></li>
       <li><a href="#services">Our Services</a></li>
       <li><a href="#ai">AI Services</a></li>
+      <li><a href="#products">Products</a></li>
       <li><a href="#how">How it works</a></li>
       <li><a href="#contact">Contact Us</a></li>
     </ul>
@@ -1825,6 +2090,96 @@
     </div>
   </div>
 
+  <!-- PRODUCTS -->
+  <section id="products">
+    <div class="products-section">
+      <p class="section-label">Our Products</p>
+      <h2 class="section-title">Built by Dorvin, for the world</h2>
+      <p>Beyond client projects, we build our own products — solving real-world problems with thoughtful engineering and a deep understanding of communities we care about.</p>
+
+      <div class="product-card">
+        <!-- Left: Content -->
+        <div class="product-card-content">
+          <div>
+            <div class="product-badge">Live Product</div>
+            <div class="product-name">Tamil<span>Petti</span></div>
+            <div class="product-tamil">தமிழ் பெட்டி — ToolBox Tamil</div>
+            <p class="product-desc">
+              A free, privacy-first utility platform built for the global Tamil community. From PDF tools and image editors to Tamil typing, Unicode conversion, and transliteration — everything runs on your device, nothing leaves your browser.
+            </p>
+            <div class="product-pills">
+              <span class="product-pill"><span class="product-pill-icon">🔒</span> Privacy First</span>
+              <span class="product-pill"><span class="product-pill-icon">⚡</span> Works Offline</span>
+              <span class="product-pill"><span class="product-pill-icon">🆓</span> 100% Free</span>
+              <span class="product-pill"><span class="product-pill-icon">🌐</span> No Sign-up</span>
+              <span class="product-pill"><span class="product-pill-icon">🇮🇳</span> Tamil + English</span>
+            </div>
+          </div>
+
+          <div class="product-stats">
+            <div class="product-stat">
+              <div class="product-stat-val">4.8★</div>
+              <div class="product-stat-label">User Rating</div>
+            </div>
+            <div class="product-stat">
+              <div class="product-stat-val">1,250+</div>
+              <div class="product-stat-label">Reviews</div>
+            </div>
+            <div class="product-stat">
+              <div class="product-stat-val">30+</div>
+              <div class="product-stat-label">Free Tools</div>
+            </div>
+            <div class="product-stat">
+              <div class="product-stat-val">6</div>
+              <div class="product-stat-label">Countries Served</div>
+            </div>
+          </div>
+
+          <div class="product-actions">
+            <a href="https://tamilpetti.com/" target="_blank" rel="noopener" class="product-btn-primary">
+              Visit TamilPetti ↗
+            </a>
+            <a href="#contact" class="product-btn-ghost">Build something similar</a>
+          </div>
+        </div>
+
+        <!-- Right: Visual -->
+        <div class="product-card-visual">
+          <div class="product-tool-grid">
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">📄</div>
+              <div class="product-tool-name">PDF Tools</div>
+            </div>
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">🖼️</div>
+              <div class="product-tool-name">Image Editor</div>
+            </div>
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">🔡</div>
+              <div class="product-tool-name">Tamil Typing</div>
+            </div>
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">🔄</div>
+              <div class="product-tool-name">Unicode Convert</div>
+            </div>
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">📅</div>
+              <div class="product-tool-name">Tamil Calendar</div>
+            </div>
+            <div class="product-tool-item">
+              <div class="product-tool-emoji">🔐</div>
+              <div class="product-tool-name">QR & Barcode</div>
+            </div>
+          </div>
+          <div class="product-trust">
+            <span class="product-trust-stars">★★★★★</span>
+            Trusted by Tamil communities across India, Singapore, Malaysia & UAE
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACT US -->
   <section class="contact-section" id="contact">
     <div class="contact-inner">
@@ -1912,6 +2267,7 @@
     <ul class="footer-links">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
+      <li><a href="#products">Products</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </footer>
