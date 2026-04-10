@@ -2468,5 +2468,134 @@
       observer.observe(el);
     });
   </script>
+
+  <!-- ── COOKIE CONSENT BANNER ── -->
+  <style>
+    @keyframes dorvinConsentUp   { from{transform:translateY(100%);opacity:0} to{transform:translateY(0);opacity:1} }
+    @keyframes dorvinConsentDown { from{transform:translateY(0);opacity:1}    to{transform:translateY(100%);opacity:0} }
+
+    #dorvin-consent {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      z-index: 99999;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      box-shadow: 0 -8px 40px rgba(0,0,0,.25);
+      animation: dorvinConsentUp .35s cubic-bezier(.4,0,.2,1);
+      font-family: inherit;
+    }
+    #dorvin-consent-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 1.1rem 2rem;
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    #dorvin-consent-icon { font-size: 1.6rem; flex-shrink: 0; }
+    #dorvin-consent-text { flex: 1; min-width: 220px; }
+    #dorvin-consent-text strong {
+      display: block; font-size: .88rem; font-weight: 700;
+      color: var(--text); margin-bottom: .25rem;
+    }
+    #dorvin-consent-text p {
+      font-size: .78rem; color: var(--muted); line-height: 1.6; margin: 0;
+    }
+    #dorvin-consent-text a { color: var(--accent); text-decoration: underline; font-size: .76rem; }
+
+    #dorvin-consent-actions { display: flex; gap: .6rem; flex-shrink: 0; flex-wrap: wrap; }
+
+    #dorvin-consent-accept {
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      padding: .6rem 1.3rem; font-size: .84rem; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+      transition: opacity .2s, transform .2s; font-family: inherit;
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+    #dorvin-consent-accept:hover { opacity: .85; transform: translateY(-1px); }
+
+    #dorvin-consent-decline {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: .58rem 1rem; font-size: .8rem; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: border-color .2s, color .2s; font-family: inherit;
+    }
+    #dorvin-consent-decline:hover { border-color: var(--muted); color: var(--text); }
+
+    #dorvin-consent-powered {
+      width: 100%; text-align: right;
+      font-size: .62rem; color: var(--muted); opacity: .55;
+    }
+
+    @media (max-width: 640px) {
+      #dorvin-consent-inner   { flex-direction: column; gap: .85rem; padding: 1rem 1.25rem; }
+      #dorvin-consent-actions { width: 100%; }
+      #dorvin-consent-accept,
+      #dorvin-consent-decline { flex: 1; text-align: center; }
+    }
+  </style>
+
+  <div id="dorvin-consent" role="dialog" aria-label="Cookie consent" style="display:none;">
+    <div id="dorvin-consent-inner">
+      <div id="dorvin-consent-icon" aria-hidden="true">🍪</div>
+      <div id="dorvin-consent-text">
+        <strong>We use cookies</strong>
+        <p>
+          We use essential cookies to operate this site, and optional analytics cookies to understand
+          how visitors interact with our pages. No advertising cookies are used.
+          <a href="mailto:ceo@dorvin.in">Privacy questions? ceo@dorvin.in</a>
+        </p>
+      </div>
+      <div id="dorvin-consent-actions">
+        <button id="dorvin-consent-decline">Essential Only</button>
+        <button id="dorvin-consent-accept">Accept &amp; Continue</button>
+      </div>
+      <div id="dorvin-consent-powered">Dorvin &mdash; dorvin.in &copy; 2025</div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const KEY     = 'dorvin_consent';
+      const EXPIRY  = 365;
+
+      function getConsent() {
+        try {
+          const raw = localStorage.getItem(KEY);
+          if (!raw) return null;
+          const d = JSON.parse(raw);
+          if ((Date.now() - new Date(d.savedAt).getTime()) / 86400000 > EXPIRY) {
+            localStorage.removeItem(KEY); return null;
+          }
+          return d;
+        } catch { return null; }
+      }
+
+      function saveConsent(analytics) {
+        localStorage.setItem(KEY, JSON.stringify({ analytics, savedAt: new Date().toISOString() }));
+      }
+
+      function dismiss() {
+        const bar = document.getElementById('dorvin-consent');
+        if (!bar) return;
+        bar.style.animation = 'dorvinConsentDown .3s cubic-bezier(.4,0,.2,1) forwards';
+        setTimeout(() => bar.remove(), 320);
+      }
+
+      /* Show banner only if no prior consent */
+      if (!getConsent()) {
+        const bar = document.getElementById('dorvin-consent');
+        if (bar) bar.style.display = '';
+
+        document.getElementById('dorvin-consent-accept').addEventListener('click', function () {
+          saveConsent(true); dismiss();
+        });
+        document.getElementById('dorvin-consent-decline').addEventListener('click', function () {
+          saveConsent(false); dismiss();
+        });
+      } else {
+        const bar = document.getElementById('dorvin-consent');
+        if (bar) bar.remove();
+      }
+    })();
+  </script>
 </body>
 </html>
