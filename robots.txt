@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /sample-page-2/
 
 Sitemap: https://dorvin.in/sitemap.xml
