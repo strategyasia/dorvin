@@ -1638,71 +1638,54 @@
       transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     }
 
-    /* Blue-to-cyan accent line, hidden by default, reveals on hover */
+    /* Accent line — always faint, intensifies on hover */
     .app-card::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 2px;
       background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      opacity: 0;
+      opacity: 0.18;
       transition: opacity 0.3s;
     }
 
     .app-card:hover {
-      border-color: rgba(37, 99, 235, 0.4);
-      box-shadow: 0 16px 48px rgba(6, 182, 212, 0.07), 0 4px 16px rgba(0,0,0,0.3);
-      transform: translateY(-4px);
+      border-color: rgba(37, 99, 235, 0.38);
+      box-shadow: 0 20px 52px rgba(6, 182, 212, 0.08), 0 4px 18px rgba(0,0,0,0.28);
+      transform: translateY(-5px);
     }
 
     .app-card:hover::before { opacity: 1; }
 
     .app-card-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-    }
-
-    .app-icon-wrap {
-      width: 50px;
-      height: 50px;
-      border-radius: 13px;
-      background: rgba(37, 99, 235, 0.09);
-      border: 1px solid rgba(37, 99, 235, 0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      flex-shrink: 0;
+      margin-bottom: 1rem;
     }
 
     .app-category-tag {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 0.22rem 0.7rem;
-      border-radius: 999px;
-      font-size: 0.66rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      display: inline-block;
+      color: var(--accent-2);
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      margin-top: 0.2rem;
+      margin-bottom: 0.6rem;
+      opacity: 0.85;
     }
 
     .app-name {
-      font-size: 1.08rem;
+      font-size: 1.3rem;
       font-weight: 800;
-      letter-spacing: -0.4px;
-      margin-bottom: 0.15rem;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 0.2rem;
     }
 
     .app-url {
       font-size: 0.72rem;
-      color: var(--accent-2);
+      color: var(--muted);
       font-weight: 500;
-      margin-bottom: 0.85rem;
-      opacity: 0.8;
+      margin-bottom: 0.9rem;
+      opacity: 0.65;
     }
 
     .app-desc {
@@ -2410,7 +2393,6 @@
         <!-- TamilPetti -->
         <div class="app-card">
           <div class="app-card-top">
-            <div class="app-icon-wrap">🔡</div>
             <span class="app-category-tag">Consumer · Live</span>
           </div>
           <div class="app-name">TamilPetti</div>
@@ -2431,7 +2413,6 @@
         <!-- FourWinds -->
         <div class="app-card">
           <div class="app-card-top">
-            <div class="app-icon-wrap">🌐</div>
             <span class="app-category-tag">Corporate · Client</span>
           </div>
           <div class="app-name">Four Winds International</div>
@@ -2452,7 +2433,6 @@
         <!-- RetailEdge -->
         <div class="app-card">
           <div class="app-card-top">
-            <div class="app-icon-wrap">🛒</div>
             <span class="app-category-tag">E-Commerce · Client</span>
           </div>
           <div class="app-name">RetailEdge Platform</div>
@@ -2474,7 +2454,6 @@
         <!-- MediPortal -->
         <div class="app-card">
           <div class="app-card-top">
-            <div class="app-icon-wrap">🏥</div>
             <span class="app-category-tag">HealthTech · Client</span>
           </div>
           <div class="app-name">MediPortal 360</div>
@@ -2496,7 +2475,6 @@
         <!-- FinAudit -->
         <div class="app-card">
           <div class="app-card-top">
-            <div class="app-icon-wrap">💰</div>
             <span class="app-category-tag">FinTech · Client</span>
           </div>
           <div class="app-name">FinAudit Pro</div>
