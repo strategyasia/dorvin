@@ -139,15 +139,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #070d1a;
-      --surface: #0c1929;
-      --border: #162640;
+      --bg: #050c1c;
+      --surface: #0a1830;
+      --border: #1a3054;
       --accent: #2563eb;
+      --accent-2: #06b6d4;
+      --accent-3: #8b5cf6;
       --accent-light: #60a5fa;
-      --accent-glow: rgba(37, 99, 235, 0.28);
-      --text: #eef3fa;
-      --muted: #7a8fa8;
-      --pill-bg: rgba(37, 99, 235, 0.1);
+      --accent-glow: rgba(37, 99, 235, 0.35);
+      --text: #f0f6ff;
+      --muted: #6b8aaa;
+      --pill-bg: rgba(37, 99, 235, 0.13);
     }
 
     html { scroll-behavior: smooth; }
@@ -161,7 +163,7 @@
     }
 
     /* SCROLL OFFSET */
-    #about, #services, #ai, #how, #contact { scroll-margin-top: 64px; }
+    #about, #services, #ai, #how, #apps, #products, #contact { scroll-margin-top: 64px; }
 
     /* NAV */
     nav {
@@ -206,7 +208,7 @@
     .nav-links a:hover { color: var(--text); }
 
     .nav-cta {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%);
       color: #fff;
       border: none;
       padding: 0.5rem 1.25rem;
@@ -214,12 +216,13 @@
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.2s;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
       text-decoration: none;
       flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(37,99,235,0.3);
     }
 
-    .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(37,99,235,0.45); }
 
     /* HERO */
     .hero {
@@ -260,7 +263,7 @@
     .blob-2 {
       width: 600px; height: 600px;
       top: 5%; right: -5%;
-      background: radial-gradient(circle, rgba(14,165,233,0.65) 0%, rgba(14,165,233,0) 65%);
+      background: radial-gradient(circle, rgba(6,182,212,0.75) 0%, rgba(6,182,212,0) 65%);
       animation: blob2 22s ease-in-out infinite;
     }
 
@@ -312,7 +315,7 @@
     .blob-5 {
       width: 500px; height: 500px;
       top: 15%; left: 42%;
-      background: radial-gradient(circle, rgba(139,92,246,0.45) 0%, rgba(139,92,246,0) 65%);
+      background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(139,92,246,0) 65%);
       animation: blob5 20s ease-in-out infinite;
     }
 
@@ -418,7 +421,7 @@
     }
 
     h1 .highlight {
-      background: linear-gradient(135deg, var(--accent) 0%, #93c5fd 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #06b6d4 50%, #a78bfa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -440,7 +443,7 @@
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%);
       color: #fff;
       padding: 0.85rem 2rem;
       border-radius: 10px;
@@ -450,10 +453,10 @@
       border: none;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 0 0 30px var(--accent-glow);
+      box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(6,182,212,0.12);
     }
 
-    .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: 0 8px 40px var(--accent-glow); }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-2px); box-shadow: 0 8px 40px var(--accent-glow), 0 8px 60px rgba(6,182,212,0.18); }
 
     .btn-ghost {
       background: transparent;
@@ -509,7 +512,10 @@
 
     .section-label {
       text-align: center;
-      color: var(--accent);
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 2px;
@@ -535,10 +541,19 @@
 
     /* ABOUT */
     .about-section {
-      background: var(--surface);
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(10,24,48,0.92) 100%);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 6rem 2rem;
+      position: relative;
+    }
+    .about-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 30%, var(--accent-2) 70%, transparent 100%);
+      opacity: 0.6;
     }
 
     .about-inner {
@@ -573,10 +588,24 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 1.5rem;
-      transition: border-color 0.2s;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
     }
 
-    .value-item:hover { border-color: var(--accent); }
+    .value-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2));
+      border-radius: 0 2px 2px 0;
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .value-item:hover { border-color: rgba(6,182,212,0.4); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(6,182,212,0.1); }
+    .value-item:hover::before { opacity: 1; }
 
     .value-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
 
@@ -757,7 +786,7 @@
 
     .svc-cta-btn {
       display: block;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%);
       color: #fff;
       text-align: center;
       padding: 0.8rem 1.25rem;
@@ -769,7 +798,7 @@
       box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    .svc-cta-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+    .svc-cta-btn:hover { opacity: 0.88; transform: translateY(-2px); }
 
     .svc-cta-ghost {
       display: block;
@@ -798,10 +827,19 @@
 
     /* HOW IT WORKS */
     .steps-section {
-      background: var(--surface);
+      background: linear-gradient(180deg, var(--surface) 0%, rgba(10,24,48,0.92) 100%);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 6rem 2rem;
+      position: relative;
+    }
+    .steps-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent-2) 30%, var(--accent-3) 70%, transparent 100%);
+      opacity: 0.5;
     }
 
     .steps-inner { max-width: 1100px; margin: 0 auto; }
@@ -819,15 +857,21 @@
       width: 52px;
       height: 52px;
       border-radius: 50%;
-      background: var(--pill-bg);
-      border: 1px solid rgba(37, 99, 235, 0.3);
-      color: var(--accent);
+      background: linear-gradient(135deg, rgba(37,99,235,0.18) 0%, rgba(6,182,212,0.12) 100%);
+      border: 1px solid rgba(6,182,212,0.35);
+      background-clip: padding-box;
       font-size: 1.2rem;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 1.25rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* outer ring */
+      box-shadow: 0 0 0 1px rgba(6,182,212,0.3), 0 0 20px rgba(37,99,235,0.2);
     }
 
     .step h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -850,7 +894,7 @@
     .stat-value {
       font-size: clamp(2.5rem, 5vw, 4rem);
       font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), #93c5fd);
+      background: linear-gradient(135deg, #2563eb 0%, #06b6d4 50%, #a78bfa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -859,7 +903,7 @@
       margin-bottom: 0.5rem;
     }
 
-    .stat-label { color: var(--muted); font-size: 0.9rem; }
+    .stat-label { color: var(--muted); font-size: 0.9rem; font-weight: 500; }
 
     /* AI SERVICES */
     .ai-section {
@@ -876,10 +920,18 @@
       position: absolute;
       top: -30%;
       right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(6,182,212,0.12) 0%, rgba(37,99,235,0.08) 40%, transparent 70%);
       pointer-events: none;
+    }
+    .ai-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent-3) 30%, var(--accent) 70%, transparent 100%);
+      opacity: 0.4;
     }
 
     .ai-inner { max-width: 1100px; margin: 0 auto; }
@@ -909,7 +961,7 @@
       transition: border-color 0.2s, transform 0.2s;
     }
 
-    .ai-cap-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    .ai-cap-card:hover { border-color: var(--accent-2); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(6,182,212,0.12); }
 
     .ai-cap-icon {
       width: 44px;
@@ -1163,8 +1215,10 @@
       --border: #ccd8ea;
       --text: #0c1829;
       --muted: #4a6080;
-      --pill-bg: rgba(37, 99, 235, 0.07);
-      --accent-glow: rgba(37, 99, 235, 0.15);
+      --pill-bg: rgba(37, 99, 235, 0.08);
+      --accent-glow: rgba(37, 99, 235, 0.18);
+      --accent-2: #0891b2;
+      --accent-3: #7c3aed;
     }
 
     [data-theme="light"] body { background: #eef3fa; color: #0c1829; }
@@ -1454,7 +1508,7 @@
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      background: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #0ea5e9 100%);
       color: #fff;
       padding: 0.75rem 1.5rem;
       border-radius: 10px;
@@ -1465,7 +1519,7 @@
       box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    .product-btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
+    .product-btn-primary:hover { opacity: 0.88; transform: translateY(-2px); }
 
     .product-btn-ghost {
       display: inline-flex;
@@ -1555,6 +1609,249 @@
       .product-card-visual { border-left: none; border-top: 1px solid var(--border); }
       .product-card-content { padding: 2rem; }
     }
+
+    /* ── APP SHOWCASE ─────────────────────────────── */
+    .apps-section {
+      padding: 7rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .apps-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 40% at 15% 50%, rgba(6,182,212,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 85% 50%, rgba(139,92,246,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .apps-section .section-sub { margin-bottom: 4rem; }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: transform 0.28s, border-color 0.28s, box-shadow 0.28s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-card-header {
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-icon-wrap {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-category-tag {
+      background: rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.95);
+      padding: 0.25rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    .app-card-body {
+      padding: 1.5rem 1.75rem;
+      flex: 1;
+    }
+
+    .app-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      margin-bottom: 0.4rem;
+    }
+
+    .app-url {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      opacity: 0.75;
+    }
+
+    .app-desc {
+      color: var(--muted);
+      font-size: 0.875rem;
+      line-height: 1.65;
+      margin-bottom: 1.2rem;
+    }
+
+    .app-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .app-tech-tag {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.18rem 0.6rem;
+      border-radius: 5px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .app-card-footer {
+      display: flex;
+      gap: 0.75rem;
+      padding: 1rem 1.75rem 1.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+
+    .app-btn-primary {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: #fff;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .app-btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .app-btn-ghost {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.65rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+
+    .app-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Card colour themes */
+    .app-h-blue   { background: linear-gradient(135deg, #1d4ed8, #0ea5e9); }
+    .app-h-teal   { background: linear-gradient(135deg, #0891b2, #059669); }
+    .app-h-purple { background: linear-gradient(135deg, #7c3aed, #db2777); }
+    .app-h-orange { background: linear-gradient(135deg, #ea580c, #d97706); }
+    .app-h-green  { background: linear-gradient(135deg, #059669, #0d9488); }
+    .app-h-indigo { background: linear-gradient(135deg, #4f46e5, #7c3aed); }
+
+    .app-btn-blue   { background: linear-gradient(135deg, #2563eb, #0ea5e9); box-shadow: 0 4px 20px rgba(37,99,235,0.35); }
+    .app-btn-teal   { background: linear-gradient(135deg, #0891b2, #059669); box-shadow: 0 4px 20px rgba(8,145,178,0.35); }
+    .app-btn-purple { background: linear-gradient(135deg, #7c3aed, #db2777); box-shadow: 0 4px 20px rgba(124,58,237,0.35); }
+    .app-btn-orange { background: linear-gradient(135deg, #ea580c, #d97706); box-shadow: 0 4px 20px rgba(234,88,12,0.35); }
+    .app-btn-green  { background: linear-gradient(135deg, #059669, #0d9488); box-shadow: 0 4px 20px rgba(5,150,105,0.35); }
+    .app-btn-indigo { background: linear-gradient(135deg, #4f46e5, #7c3aed); box-shadow: 0 4px 20px rgba(79,70,229,0.35); }
+
+    .app-card.blue:hover   { border-color: rgba(37,99,235,0.5);   box-shadow: 0 20px 60px rgba(37,99,235,0.14);   transform: translateY(-6px); }
+    .app-card.teal:hover   { border-color: rgba(8,145,178,0.5);   box-shadow: 0 20px 60px rgba(8,145,178,0.14);   transform: translateY(-6px); }
+    .app-card.purple:hover { border-color: rgba(124,58,237,0.5);  box-shadow: 0 20px 60px rgba(124,58,237,0.14);  transform: translateY(-6px); }
+    .app-card.orange:hover { border-color: rgba(234,88,12,0.5);   box-shadow: 0 20px 60px rgba(234,88,12,0.14);   transform: translateY(-6px); }
+    .app-card.green:hover  { border-color: rgba(5,150,105,0.5);   box-shadow: 0 20px 60px rgba(5,150,105,0.14);   transform: translateY(-6px); }
+    .app-card.indigo:hover { border-color: rgba(79,70,229,0.5);   box-shadow: 0 20px 60px rgba(79,70,229,0.14);   transform: translateY(-6px); }
+
+    /* "Build yours" CTA card */
+    .app-card-cta {
+      background: linear-gradient(135deg, rgba(37,99,235,0.1) 0%, rgba(6,182,212,0.07) 100%);
+      border: 1px dashed rgba(37,99,235,0.35);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      gap: 1rem;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+      text-decoration: none;
+    }
+
+    .app-card-cta:hover {
+      border-color: var(--accent-2);
+      box-shadow: 0 16px 48px rgba(6,182,212,0.12);
+      transform: translateY(-4px);
+    }
+
+    .app-card-cta-icon {
+      font-size: 2.5rem;
+      width: 72px; height: 72px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.15), rgba(6,182,212,0.12));
+      border: 1px solid rgba(6,182,212,0.3);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .app-card-cta h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text);
+    }
+
+    .app-card-cta p {
+      color: var(--muted);
+      font-size: 0.87rem;
+      line-height: 1.6;
+      max-width: 220px;
+    }
+
+    .app-card-cta-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      padding: 0.65rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    [data-theme="light"] .app-tech-tag { background: rgba(0,0,0,0.03); }
+    [data-theme="light"] .app-card-cta { background: linear-gradient(135deg, rgba(37,99,235,0.05), rgba(6,182,212,0.04)); }
+
+    @media (max-width: 768px) {
+      .apps-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -1566,6 +1863,7 @@
       <li><a href="#about">About Us</a></li>
       <li><a href="#services">Our Services</a></li>
       <li><a href="#ai">AI Services</a></li>
+      <li><a href="#apps">App Showcase</a></li>
       <li><a href="#how">How it works</a></li>
       <li><a href="#contact">Contact Us</a></li>
     </ul>
@@ -2115,92 +2413,141 @@
     </div>
   </div>
 
-  <!-- PRODUCTS -->
-  <section id="products">
-    <div class="products-section">
-      <p class="section-label">Featured Work</p>
-      <h2 class="section-title">Platforms we've shipped</h2>
-      <p>Alongside client engagements, we build and run live platforms — tackling real community needs with the same engineering rigour we bring to every project.</p>
+  <!-- APP SHOWCASE -->
+  <section class="apps-section" id="apps">
+    <div style="max-width:1100px;margin:0 auto;">
+      <p class="section-label" style="text-align:center">App Showcase</p>
+      <h2 class="section-title">Products &amp; apps we've shipped</h2>
+      <p class="section-sub">From consumer utility platforms to enterprise web applications — real products built and delivered by our team.</p>
 
-      <div class="product-card">
-        <!-- Left: Content -->
-        <div class="product-card-content">
-          <div>
-            <div class="product-badge">Live Platform</div>
-            <div class="product-name">Tamil<span>Petti</span></div>
-            <div class="product-tamil">தமிழ் பெட்டி — ToolBox Tamil</div>
-            <p class="product-desc">
-              A free, privacy-first utility platform built for the global Tamil community. From PDF tools and image editors to Tamil typing, Unicode conversion, and transliteration — everything runs on your device, nothing leaves your browser.
-            </p>
-            <div class="product-pills">
-              <span class="product-pill"><span class="product-pill-icon">🔒</span> Privacy First</span>
-              <span class="product-pill"><span class="product-pill-icon">⚡</span> Works Offline</span>
-              <span class="product-pill"><span class="product-pill-icon">🆓</span> 100% Free</span>
-              <span class="product-pill"><span class="product-pill-icon">🌐</span> No Sign-up</span>
-              <span class="product-pill"><span class="product-pill-icon">🇮🇳</span> Tamil + English</span>
+      <div class="apps-grid">
+
+        <!-- TamilPetti -->
+        <div class="app-card blue">
+          <div class="app-card-header app-h-blue">
+            <div class="app-icon-wrap">🔡</div>
+            <span class="app-category-tag">Consumer · Live</span>
+          </div>
+          <div class="app-card-body">
+            <div class="app-name">TamilPetti</div>
+            <div class="app-url">tamilpetti.com</div>
+            <p class="app-desc">A free, privacy-first utility platform for the global Tamil community — PDF tools, image editor, Tamil typing, Unicode conversion, QR generation and 30+ more tools. Everything runs in-browser, nothing leaves your device.</p>
+            <div class="app-tech">
+              <span class="app-tech-tag">Vanilla JS</span>
+              <span class="app-tech-tag">PWA</span>
+              <span class="app-tech-tag">Client-side only</span>
+              <span class="app-tech-tag">IndexedDB</span>
             </div>
           </div>
-
-          <div class="product-stats">
-            <div class="product-stat">
-              <div class="product-stat-val">4.8★</div>
-              <div class="product-stat-label">User Rating</div>
-            </div>
-            <div class="product-stat">
-              <div class="product-stat-val">1,250+</div>
-              <div class="product-stat-label">Reviews</div>
-            </div>
-            <div class="product-stat">
-              <div class="product-stat-val">30+</div>
-              <div class="product-stat-label">Free Tools</div>
-            </div>
-            <div class="product-stat">
-              <div class="product-stat-val">6</div>
-              <div class="product-stat-label">Countries Served</div>
-            </div>
-          </div>
-
-          <div class="product-actions">
-            <a href="https://tamilpetti.com/" target="_blank" rel="noopener" class="product-btn-primary">
-              Visit TamilPetti ↗
-            </a>
-            <a href="#contact" class="product-btn-ghost">Build something similar</a>
+          <div class="app-card-footer">
+            <a href="https://tamilpetti.com/" target="_blank" rel="noopener" class="app-btn-primary app-btn-blue">Visit App ↗</a>
+            <a href="#contact" class="app-btn-ghost">Build similar</a>
           </div>
         </div>
 
-        <!-- Right: Visual -->
-        <div class="product-card-visual">
-          <div class="product-tool-grid">
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">📄</div>
-              <div class="product-tool-name">PDF Tools</div>
-            </div>
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">🖼️</div>
-              <div class="product-tool-name">Image Editor</div>
-            </div>
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">🔡</div>
-              <div class="product-tool-name">Tamil Typing</div>
-            </div>
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">🔄</div>
-              <div class="product-tool-name">Unicode Convert</div>
-            </div>
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">📅</div>
-              <div class="product-tool-name">Tamil Calendar</div>
-            </div>
-            <div class="product-tool-item">
-              <div class="product-tool-emoji">🔐</div>
-              <div class="product-tool-name">QR & Barcode</div>
+        <!-- FourWinds -->
+        <div class="app-card teal">
+          <div class="app-card-header app-h-teal">
+            <div class="app-icon-wrap">🌐</div>
+            <span class="app-category-tag">Corporate · Client</span>
+          </div>
+          <div class="app-card-body">
+            <div class="app-name">Four Winds International</div>
+            <div class="app-url">fourwindsintlgroup.com</div>
+            <p class="app-desc">Corporate web platform for a global relocation &amp; logistics group — multilingual service pages, quote request flows, project cargo portfolio, and an integrated contact system serving clients across 50+ countries.</p>
+            <div class="app-tech">
+              <span class="app-tech-tag">HTML5</span>
+              <span class="app-tech-tag">CSS3</span>
+              <span class="app-tech-tag">JavaScript</span>
+              <span class="app-tech-tag">FormSubmit</span>
             </div>
           </div>
-          <div class="product-trust">
-            <span class="product-trust-stars">★★★★★</span>
-            Trusted by businesses across India, Singapore, Malaysia & UAE
+          <div class="app-card-footer">
+            <a href="https://fourwindsintlgroup.com/" target="_blank" rel="noopener" class="app-btn-primary app-btn-teal">Visit App ↗</a>
+            <a href="#contact" class="app-btn-ghost">Build similar</a>
           </div>
         </div>
+
+        <!-- RetailEdge -->
+        <div class="app-card orange">
+          <div class="app-card-header app-h-orange">
+            <div class="app-icon-wrap">🛒</div>
+            <span class="app-category-tag">E-Commerce · Client</span>
+          </div>
+          <div class="app-card-body">
+            <div class="app-name">RetailEdge Platform</div>
+            <div class="app-url">Client — Confidential</div>
+            <p class="app-desc">Multi-vendor e-commerce platform with real-time inventory management, dynamic pricing engine, integrated payment gateway, and an analytics dashboard tracking 50,000+ SKUs across 3 regional warehouses.</p>
+            <div class="app-tech">
+              <span class="app-tech-tag">Next.js</span>
+              <span class="app-tech-tag">Node.js</span>
+              <span class="app-tech-tag">PostgreSQL</span>
+              <span class="app-tech-tag">Stripe</span>
+              <span class="app-tech-tag">AWS</span>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <a href="#contact" class="app-btn-primary app-btn-orange">Enquire ↗</a>
+            <a href="#contact" class="app-btn-ghost">Build similar</a>
+          </div>
+        </div>
+
+        <!-- MediPortal -->
+        <div class="app-card green">
+          <div class="app-card-header app-h-green">
+            <div class="app-icon-wrap">🏥</div>
+            <span class="app-category-tag">HealthTech · Client</span>
+          </div>
+          <div class="app-card-body">
+            <div class="app-name">MediPortal 360</div>
+            <div class="app-url">Client — Healthcare</div>
+            <p class="app-desc">Patient management portal with appointment scheduling, EHR integration, telemedicine video consultations, and AI-assisted diagnostic reporting for a multi-speciality hospital group across 8 locations.</p>
+            <div class="app-tech">
+              <span class="app-tech-tag">React</span>
+              <span class="app-tech-tag">Java Spring</span>
+              <span class="app-tech-tag">HL7 FHIR</span>
+              <span class="app-tech-tag">WebRTC</span>
+              <span class="app-tech-tag">HIPAA</span>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <a href="#contact" class="app-btn-primary app-btn-green">Enquire ↗</a>
+            <a href="#contact" class="app-btn-ghost">Build similar</a>
+          </div>
+        </div>
+
+        <!-- FinAudit -->
+        <div class="app-card indigo">
+          <div class="app-card-header app-h-indigo">
+            <div class="app-icon-wrap">💰</div>
+            <span class="app-category-tag">FinTech · Client</span>
+          </div>
+          <div class="app-card-body">
+            <div class="app-name">FinAudit Pro</div>
+            <div class="app-url">Client — Financial Services</div>
+            <p class="app-desc">Automated financial compliance and audit management SaaS — reconciliation engine, audit trail, regulatory reporting (MAS, RBI), and anomaly detection using ML models for a regional banking client.</p>
+            <div class="app-tech">
+              <span class="app-tech-tag">Angular</span>
+              <span class="app-tech-tag">Python</span>
+              <span class="app-tech-tag">PostgreSQL</span>
+              <span class="app-tech-tag">Scikit-learn</span>
+              <span class="app-tech-tag">AES-256</span>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <a href="#contact" class="app-btn-primary app-btn-indigo">Enquire ↗</a>
+            <a href="#contact" class="app-btn-ghost">Build similar</a>
+          </div>
+        </div>
+
+        <!-- Build Yours CTA -->
+        <a href="#contact" class="app-card-cta">
+          <div class="app-card-cta-icon">✦</div>
+          <h3>Your project here</h3>
+          <p>Have an idea? We'll turn it into a live, production-grade product.</p>
+          <span class="app-card-cta-btn">Start a conversation →</span>
+        </a>
+
       </div>
     </div>
   </section>
@@ -2292,6 +2639,7 @@
     <ul class="footer-links">
       <li><a href="#about">About</a></li>
       <li><a href="#services">Services</a></li>
+      <li><a href="#apps">Apps</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </footer>
