@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy | Dorvin</title>
+  <meta name="description" content="Dorvin's Privacy Policy — how we collect, use, and protect your personal information." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://dorvin.in/privacy.html" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #050c1c;
+      --surface: #0a1830;
+      --border: #1a3054;
+      --accent: #2563eb;
+      --accent-2: #06b6d4;
+      --accent-light: #60a5fa;
+      --text: #f0f6ff;
+      --muted: #6b8aaa;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; width: 100%;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 12, 28, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-back {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--text); }
+
+    /* PAGE */
+    .page-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 6rem 2rem 5rem;
+    }
+
+    .page-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 4vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-meta {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 3.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin: 2.5rem 0 0.75rem;
+      color: var(--text);
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    ul li {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--accent-2);
+    }
+
+    a { color: var(--accent-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .highlight-box p { margin-bottom: 0; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .footer-logo { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { color: var(--muted); font-size: 0.85rem; }
+
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="logo">dorv<span>in</span></a>
+    <a href="/" class="nav-back">← Back to dorvin.in</a>
+  </nav>
+
+  <div class="page-wrap">
+    <p class="page-label">Legal</p>
+    <h1>Privacy Policy</h1>
+    <p class="page-meta">Last updated: 27 April 2026 &nbsp;·&nbsp; Effective date: 27 April 2026</p>
+
+    <div class="highlight-box">
+      <p>Dorvin is committed to protecting your privacy. This policy explains what personal information we collect, how we use it, and your rights regarding that information. We do not sell your data — ever.</p>
+    </div>
+
+    <h2>1. Who We Are</h2>
+    <p>Dorvin is a global IT services and software development company. References to "Dorvin", "we", "us", or "our" in this policy refer to Dorvin and its team. Our primary contact address is <a href="mailto:ceo@dorvin.in">ceo@dorvin.in</a>.</p>
+
+    <h2>2. Information We Collect</h2>
+    <p>We collect personal information only when you actively provide it to us. This includes:</p>
+    <ul>
+      <li><strong>Contact form submissions</strong> — your first name, last name, work email address, the service you are enquiring about, and your message.</li>
+      <li><strong>Email correspondence</strong> — any information you include when you contact us directly by email.</li>
+      <li><strong>Usage data</strong> — anonymous, aggregated data about how visitors interact with our website (pages visited, time on site, browser type). This data does not identify you personally.</li>
+    </ul>
+    <p>We do not collect payment information, national identification numbers, or any sensitive personal data through this website.</p>
+
+    <h2>3. How We Use Your Information</h2>
+    <p>Information you submit through our contact form is used solely to:</p>
+    <ul>
+      <li>Respond to your enquiry or project request</li>
+      <li>Provide you with a project estimate or proposal if requested</li>
+      <li>Follow up on an ongoing conversation or engagement</li>
+    </ul>
+    <p>We do not use your contact details for unsolicited marketing without your prior consent.</p>
+
+    <h2>4. Legal Basis for Processing (GDPR)</h2>
+    <p>If you are located in the European Economic Area, our legal basis for collecting and using the personal information described above depends on the information concerned and the context in which we collect it. We rely on:</p>
+    <ul>
+      <li><strong>Legitimate interests</strong> — to respond to your enquiries and operate our business</li>
+      <li><strong>Consent</strong> — where you have explicitly provided it</li>
+      <li><strong>Contractual necessity</strong> — to fulfil obligations under a client engagement</li>
+    </ul>
+
+    <h2>5. Cookies</h2>
+    <p>Our website uses essential cookies required for the site to function correctly. We do not use advertising or tracking cookies. A cookie notice is displayed on your first visit so you can make an informed choice.</p>
+    <p>You can control cookies through your browser settings at any time. Disabling cookies will not affect your ability to use the site.</p>
+
+    <h2>6. Third-Party Services</h2>
+    <p>We use the following third-party services to operate this website:</p>
+    <ul>
+      <li><strong>FormSubmit (formsubmit.co)</strong> — processes contact form submissions and forwards them to our email. Your form data is transmitted to their servers. Please review <a href="https://formsubmit.co/privacy" target="_blank" rel="noopener">FormSubmit's privacy policy</a>.</li>
+      <li><strong>GitHub Pages</strong> — hosts this website. GitHub may log standard server access data (IP address, request time, browser). Please review <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">GitHub's privacy statement</a>.</li>
+    </ul>
+    <p>We do not share your personal information with any other third parties unless required by law or with your explicit consent.</p>
+
+    <h2>7. Data Retention</h2>
+    <p>We retain contact form enquiries and email correspondence for as long as necessary to fulfil the purpose for which they were collected — typically for the duration of any business relationship or enquiry, plus a reasonable period thereafter. You may request deletion at any time.</p>
+
+    <h2>8. Data Security</h2>
+    <p>We take reasonable technical and organisational measures to protect your personal information against accidental loss, unauthorised access, or disclosure. However, no internet transmission is entirely secure, and we cannot guarantee absolute security.</p>
+
+    <h2>9. Your Rights</h2>
+    <p>Depending on your location, you may have the right to:</p>
+    <ul>
+      <li>Access the personal information we hold about you</li>
+      <li>Request correction of inaccurate information</li>
+      <li>Request deletion of your information ("right to be forgotten")</li>
+      <li>Object to or restrict our processing of your information</li>
+      <li>Request a portable copy of your data</li>
+      <li>Withdraw consent at any time (where processing is based on consent)</li>
+    </ul>
+    <p>To exercise any of these rights, please contact us at <a href="mailto:ceo@dorvin.in">ceo@dorvin.in</a>. We will respond within 30 days.</p>
+
+    <h2>10. International Transfers</h2>
+    <p>Dorvin operates globally. Your information may be processed and stored in countries outside your own, including India. We take steps to ensure that any such transfers comply with applicable data protection laws.</p>
+
+    <h2>11. Children's Privacy</h2>
+    <p>Our website and services are not directed at children under the age of 16. We do not knowingly collect personal information from children. If you believe we have inadvertently collected such information, please contact us and we will delete it promptly.</p>
+
+    <h2>12. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. We encourage you to review this policy periodically. Continued use of our website after changes constitutes acceptance of the updated policy.</p>
+
+    <h2>13. Contact Us</h2>
+    <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:ceo@dorvin.in">ceo@dorvin.in</a></li>
+      <li><strong>Website:</strong> <a href="https://dorvin.in">dorvin.in</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    <a href="/" class="footer-logo">dorv<span>in</span></a>
+    <span class="footer-copy">© 2026 Dorvin. All rights reserved.</span>
+    <ul class="footer-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="/terms.html">Terms</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
