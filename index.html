@@ -230,6 +230,11 @@
     }
 
     /* ─── HERO ───────────────────────────────────────────────── */
+    @keyframes hero-scan {
+      0%   { left: -2px; }
+      100% { left: 100%; }
+    }
+
     #top {
       min-height: 100vh;
       display: flex;
@@ -238,17 +243,51 @@
       padding: 64px 0 0;
       position: relative;
       overflow: hidden;
-      background-image:
-        linear-gradient(to right, hsla(240,4%,20%,0.25) 1px, transparent 1px),
-        linear-gradient(to bottom, hsla(240,4%,20%,0.25) 1px, transparent 1px);
-      background-size: 80px 80px;
     }
-    #top::before {
-      content: '';
-      position: absolute;
+
+    /* All hero bg layers sit at z-index 0 so content (z-index 1) sits above */
+    .hero-bg-gradient,
+    .hero-bg-grid,
+    .hero-bg-scan,
+    .hero-bg-grain,
+    .hero-bg-vignette {
+      position: absolute; pointer-events: none; z-index: 0;
+    }
+    /* Radial gradient: subtle lighter top-center glow */
+    .hero-bg-gradient {
       inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, hsla(28,60%,30%,0.06) 0%, transparent 70%);
-      pointer-events: none;
+      background: radial-gradient(at 50% 0%, var(--surface) 0%, var(--bg) 70%);
+    }
+    /* Grid lines: bone-coloured at 6% opacity */
+    .hero-bg-grid {
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--bone) 1px, transparent 1px),
+        linear-gradient(var(--bone) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.06;
+    }
+    /* Animated amber vertical scan line */
+    .hero-bg-scan {
+      top: 0; bottom: 0; left: 0; width: 2px;
+      background: linear-gradient(to bottom, transparent, hsla(28,70%,58%,0.6), transparent);
+      animation: hero-scan 8s linear infinite;
+    }
+    /* Grain / dot texture */
+    .hero-bg-grain {
+      inset: 0;
+      background: radial-gradient(hsla(30,8%,88%,0.016) 1px, transparent 1px);
+      background-size: 3px 3px;
+      opacity: 0.5;
+    }
+    /* Vignette: edges fade to bg */
+    .hero-bg-vignette {
+      inset: 0;
+      background: radial-gradient(transparent 40%, var(--bg) 100%);
+    }
+    /* Hero content sits above bg layers */
+    .hero-corner, .hero-live, .hero-inner, .hero-foot {
+      position: relative; z-index: 1;
     }
 
     .hero-corner {
@@ -375,14 +414,19 @@
 
     /* ─── ABOUT ──────────────────────────────────────────────── */
     #about {
-      background: var(--surface);
       padding: 6rem 2.5rem;
     }
     .about-inner { max-width: 1280px; margin: 0 auto; }
-    .about-head { margin-bottom: 3.5rem; max-width: 760px; }
+    .about-2col {
+      display: grid;
+      grid-template-columns: 1fr 1.75fr;
+      gap: 0 8%;
+      margin-bottom: 4rem;
+      align-items: start;
+    }
     .about-body-text {
       font-size: 0.9rem; color: var(--muted); line-height: 1.8;
-      margin-bottom: 0.75rem; max-width: 620px;
+      margin-bottom: 1rem;
     }
     .about-highlight {
       display: inline;
@@ -416,7 +460,7 @@
     .value-body { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
 
     /* ─── SERVICES ───────────────────────────────────────────── */
-    #services { padding: 6rem 2.5rem; }
+    #services { background: var(--surface); padding: 6rem 2.5rem; }
     .services-inner { max-width: 1280px; margin: 0 auto; }
 
     .services-header {
@@ -526,7 +570,6 @@
 
     /* ─── AI ─────────────────────────────────────────────────── */
     #ai {
-      background: var(--surface);
       padding: 6rem 2.5rem;
     }
     .ai-inner { max-width: 1280px; margin: 0 auto; }
@@ -625,7 +668,7 @@
     .ai-adv-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 2rem; }
 
     /* ─── SHOWCASE ───────────────────────────────────────────── */
-    #showcase { padding: 6rem 2.5rem; }
+    #showcase { background: var(--surface); padding: 6rem 2.5rem; }
     .showcase-inner { max-width: 1280px; margin: 0 auto; }
 
     .showcase-header {
@@ -732,7 +775,6 @@
 
     /* ─── PROCESS ────────────────────────────────────────────── */
     #process {
-      background: var(--surface);
       padding: 6rem 2.5rem;
     }
     .process-inner {
@@ -799,7 +841,7 @@
     }
 
     /* ─── TESTIMONIALS ───────────────────────────────────────── */
-    #testimonials { padding: 6rem 2.5rem; }
+    #testimonials { background: var(--surface); padding: 6rem 2.5rem; }
     .testimonials-inner { max-width: 1280px; margin: 0 auto; }
     .testimonials-head { margin-bottom: 3rem; }
 
@@ -841,7 +883,6 @@
 
     /* ─── CONTACT ────────────────────────────────────────────── */
     #contact {
-      background: var(--surface);
       padding: 6rem 2.5rem;
     }
     .contact-inner {
@@ -994,6 +1035,7 @@
       .hero-inner { grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
       .hero-corner.tr, .hero-corner.br { display: none; }
       .hero-live { display: none; }
+      .about-2col { grid-template-columns: 1fr; gap: 2rem; }
       .values-grid { grid-template-columns: 1fr 1fr; }
       .value-card:nth-child(2) { border-right: none; }
       .value-card:nth-child(1), .value-card:nth-child(2) { border-bottom: 1px solid var(--border); }
@@ -1102,6 +1144,13 @@
 
 <!-- ═══════════════════════════════════ HERO ══════════════════════ -->
 <section id="top">
+  <!-- Background layers -->
+  <div class="hero-bg-gradient" aria-hidden="true"></div>
+  <div class="hero-bg-grid" aria-hidden="true"></div>
+  <div class="hero-bg-scan" aria-hidden="true"></div>
+  <div class="hero-bg-grain" aria-hidden="true"></div>
+  <div class="hero-bg-vignette" aria-hidden="true"></div>
+
   <div class="hero-corner tl"></div>
   <div class="hero-corner tr"></div>
   <div class="hero-corner bl"></div>
@@ -1147,13 +1196,17 @@
 <!-- ════════════════════════════════ ABOUT / VALUES ═══════════════ -->
 <section id="about">
   <div class="about-inner">
-    <div class="about-head">
-      <span class="section-label">About Us</span>
-      <h2 class="section-heading">We build technology<br>that <em>lasts.</em></h2>
+    <div class="about-2col">
+      <div>
+        <span class="section-label">About Us</span>
+        <h2 class="section-heading">We build technology that <em>lasts.</em></h2>
+      </div>
+      <div>
+        <p class="about-body-text">Dorvin is a globally trusted IT services company, helping businesses across the world harness the full potential of modern technology. Since 2005, we've partnered with startups, SMEs, and enterprises — delivering software solutions that are robust, scalable, and tailored to real-world needs.</p>
+        <p class="about-body-text">Our team of engineers, designers, and consultants brings deep expertise across the full technology stack. We don't just write code — we understand your business, solve the right problems, and build systems that grow with you.</p>
+        <p class="about-body-text">With over <span class="about-highlight">500 projects delivered across 21 years</span> and clients spanning IT, healthcare, finance, logistics, and retail, we've built a reputation for quality, transparency, and measurable results.</p>
+      </div>
     </div>
-    <p class="about-body-text">Dorvin is a globally trusted IT services company, helping businesses across the world harness the full power of technology. From early-stage startups to established enterprises, we deliver solutions that are built to perform, built to scale, and built to last.</p>
-    <p class="about-body-text">Our team of engineers, designers, and consultants brings deep expertise across the full technology stack — from frontend interfaces to cloud infrastructure, AI pipelines to enterprise data platforms.</p>
-    <p class="about-body-text" style="margin-bottom:3.5rem;">With over <span class="about-highlight">500 projects delivered across 21 years</span>, and clients spanning finance, healthcare, logistics, retail, and more — we've built a reputation for delivering results that matter.</p>
 
     <div class="values-grid">
       <div class="value-card">
