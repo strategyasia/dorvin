@@ -23,6 +23,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Supabase JS client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    /* ▶ PASTE YOUR SUPABASE VALUES HERE ◀
+       Settings → API in your Supabase project dashboard */
+    const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1345,39 +1356,55 @@ function renderAcc(){
 renderAcc();
 
 /* ─── CONTACT FORM ───────────────────────────── */
-document.getElementById('contact-submit').addEventListener('click', function(){
-  const wrap = document.getElementById('contact-form-wrap');
-  const form = document.getElementById('contact-form-inner');
+document.getElementById('contact-submit').addEventListener('click', async function(){
+  const form    = document.getElementById('contact-form-inner');
   const success = document.getElementById('contact-success');
-  const inputs = form.querySelectorAll('input,select,textarea');
+  const inputs  = form.querySelectorAll('input,select,textarea');
   let valid = true;
-  inputs.forEach(el => { if(el.required && !el.value.trim()){ el.style.borderBottom='1px solid var(--ember)'; valid=false; } else { el.style.borderBottom=''; } });
+  inputs.forEach(el => {
+    if(el.required && !el.value.trim()){ el.style.outline='1px solid var(--ember)'; valid=false; }
+    else { el.style.outline=''; }
+  });
   if(!valid) return;
-  this.textContent = 'Sending…'; this.disabled = true;
-  setTimeout(()=>{
-    form.style.display='none';
-    success.classList.add('show');
-  }, 800);
+  this.querySelector('span').textContent = 'Sending…'; this.disabled = true;
+  const fd = new FormData(form.querySelector('form') || form);
+  const firstName = form.querySelector('[name=firstName]').value.trim();
+  const lastName  = form.querySelector('[name=lastName]').value.trim();
+  const email     = form.querySelector('[name=email]').value.trim();
+  const service   = form.querySelector('[name=service]').value;
+  const message   = form.querySelector('[name=message]').value.trim();
+  const { error } = await db.from('contact_submissions').insert({ first_name:firstName, last_name:lastName, email, service, message });
+  this.querySelector('span').textContent = 'Send message'; this.disabled = false;
+  if(error){ alert('Something went wrong. Please email ceo@dorvin.in directly.'); return; }
+  form.style.display = 'none';
+  success.classList.add('show');
 });
 
 /* ─── SUPPORT FORM ───────────────────────────── */
-document.getElementById('support-submit').addEventListener('click', function(){
-  const success = document.getElementById('support-success');
+document.getElementById('support-submit').addEventListener('click', async function(){
+  const success  = document.getElementById('support-success');
   const ticketEl = document.getElementById('last-ticket-id');
-  const form = this.closest('.support-form');
-  const inputs = form.querySelectorAll('input,select,textarea');
+  const form     = this.closest('.support-form');
+  const inputs   = form.querySelectorAll('input,select,textarea');
   let valid = true;
-  inputs.forEach(el => { if(el.required && !el.value.trim()){ valid=false; } });
-  if(!valid){ return; }
-  this.textContent = 'Submitting…'; this.disabled = true;
-  setTimeout(()=>{
-    const id = 'DRV-' + Date.now().toString(36).toUpperCase().slice(-6);
-    ticketEl.textContent = 'Last ticket · ' + id;
-    success.innerHTML = '<strong>Ticket ' + id + ' created.</strong>Our team will reach out shortly.';
-    success.classList.add('show');
-    inputs.forEach(el => { el.value = ''; });
-    this.textContent = 'Submit ticket'; this.disabled = false;
-  }, 800);
+  inputs.forEach(el => { if(el.required && !el.value.trim()){ el.style.outline='1px solid var(--ember)'; valid=false; } else { el.style.outline=''; } });
+  if(!valid) return;
+  this.querySelector('span').textContent = 'Submitting…'; this.disabled = true;
+  const ticketId   = 'DRV-' + Date.now().toString(36).toUpperCase().slice(-6);
+  const customerId = form.querySelector('[name=customerId]').value.trim();
+  const company    = form.querySelector('[name=company]').value.trim();
+  const email      = form.querySelector('[name=email]').value.trim();
+  const category   = form.querySelector('[name=category]').value;
+  const priority   = form.querySelector('[name=priority]').value;
+  const subject    = form.querySelector('[name=subject]').value.trim();
+  const description = form.querySelector('[name=description]').value.trim();
+  const { error } = await db.from('support_tickets').insert({ ticket_id:ticketId, customer_id:customerId, company, email, category, priority, subject, description });
+  this.querySelector('span').textContent = 'Submit ticket'; this.disabled = false;
+  if(error){ alert('Something went wrong. Please email support@dorvin.in directly.'); return; }
+  ticketEl.textContent = 'Last ticket · ' + ticketId;
+  success.innerHTML = '<strong>Ticket ' + ticketId + ' created.</strong> Our team will reach out shortly.';
+  success.classList.add('show');
+  inputs.forEach(el => { el.value=''; el.style.outline=''; });
 });
 </script>
 </body>

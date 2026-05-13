@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  DORVIN ADMIN — SETUP INSTRUCTIONS                              ║
+  ╠══════════════════════════════════════════════════════════════════╣
+  ║                                                                  ║
+  ║  1. Go to https://supabase.com → New project (free)             ║
+  ║                                                                  ║
+  ║  2. In SQL Editor, run this SQL:                                 ║
+  ║  ─────────────────────────────────────────────────────────────  ║
+  ║  CREATE TABLE contact_submissions (                              ║
+  ║    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,       ║
+  ║    created_at  TIMESTAMPTZ DEFAULT NOW(),                        ║
+  ║    first_name  TEXT, last_name TEXT, email TEXT,                 ║
+  ║    service TEXT, message TEXT, status TEXT DEFAULT 'new'         ║
+  ║  );                                                              ║
+  ║  CREATE TABLE support_tickets (                                  ║
+  ║    id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,       ║
+  ║    created_at  TIMESTAMPTZ DEFAULT NOW(),                        ║
+  ║    ticket_id TEXT, customer_id TEXT, company TEXT,               ║
+  ║    email TEXT, category TEXT, priority TEXT,                     ║
+  ║    subject TEXT, description TEXT, status TEXT DEFAULT 'open'    ║
+  ║  );                                                              ║
+  ║  ALTER TABLE contact_submissions ENABLE ROW LEVEL SECURITY;      ║
+  ║  ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;          ║
+  ║  CREATE POLICY "pub_ins_c" ON contact_submissions                ║
+  ║    FOR INSERT WITH CHECK (true);                                 ║
+  ║  CREATE POLICY "pub_ins_t" ON support_tickets                    ║
+  ║    FOR INSERT WITH CHECK (true);                                 ║
+  ║  CREATE POLICY "admin_sel_c" ON contact_submissions              ║
+  ║    FOR SELECT USING (auth.role() = 'authenticated');             ║
+  ║  CREATE POLICY "admin_upd_c" ON contact_submissions              ║
+  ║    FOR UPDATE USING (auth.role() = 'authenticated');             ║
+  ║  CREATE POLICY "admin_sel_t" ON support_tickets                  ║
+  ║    FOR SELECT USING (auth.role() = 'authenticated');             ║
+  ║  CREATE POLICY "admin_upd_t" ON support_tickets                  ║
+  ║    FOR UPDATE USING (auth.role() = 'authenticated');             ║
+  ║  ─────────────────────────────────────────────────────────────  ║
+  ║                                                                  ║
+  ║  3. Authentication → Users → Add user →                         ║
+  ║     Email: admin@dorvin.in   Password: (your choice)            ║
+  ║                                                                  ║
+  ║  4. Settings → API → copy Project URL + anon public key         ║
+  ║     Paste both below AND in index.html (same two values)        ║
+  ║                                                                  ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dorvin Admin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      hsl(240,6%,4%);
+      --surface: hsl(240,5%,9%);
+      --surface2: hsl(240,4%,12%);
+      --border:  hsl(240,4%,15%);
+      --ember:   hsl(28,70%,58%);
+      --text:    hsl(30,8%,88%);
+      --muted:   hsl(240,5%,55%);
+      --bone:    hsl(30,12%,92%);
+      --steel:   hsl(220,10%,82%);
+      --green:   hsl(142,60%,45%);
+      --red:     hsl(0,65%,55%);
+    }
+    html { font-size:16px; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+    }
+    .login-box {
+      width:100%; max-width:400px; border:1px solid var(--border);
+      background:var(--surface); padding:3rem;
+    }
+    .login-logo { font-family:'Instrument Serif',serif; font-size:2rem; color:var(--bone); margin-bottom:.5rem; }
+    .login-sub  { font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:2.5rem; }
+    .login-label { display:block; font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
+    .login-input {
+      display:block; width:100%; background:var(--bg); border:1px solid var(--border);
+      padding:.85rem 1rem; font-size:1rem; font-family:'Inter',sans-serif;
+      color:var(--bone); outline:none; transition:border-color .2s;
+    }
+    .login-input:focus { border-color:var(--ember); }
+    .login-btn {
+      display:flex; width:100%; align-items:center; justify-content:space-between;
+      margin-top:1.5rem; border:1px solid var(--bone); background:var(--bone);
+      padding:1rem 1.25rem; font-size:11px; font-weight:700; letter-spacing:.24em;
+      text-transform:uppercase; color:var(--bg); cursor:pointer;
+      transition:background .2s, color .2s; font-family:'Inter',sans-serif;
+    }
+    .login-btn:hover { background:transparent; color:var(--bone); }
+    .login-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .login-error { margin-top:1rem; font-size:.8rem; color:var(--red); display:none; }
+    .login-error.show { display:block; }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display:none; min-height:100vh; }
+
+    /* topbar */
+    .topbar {
+      position:sticky; top:0; z-index:50;
+      background:hsla(240,6%,4%,.92); backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:1rem 2rem;
+    }
+    .topbar-left { display:flex; align-items:center; gap:1.5rem; }
+    .topbar-logo { font-family:'Instrument Serif',serif; font-size:1.4rem; color:var(--bone); }
+    .topbar-badge { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ember); border:1px solid hsla(28,70%,58%,.3); padding:.2em .6em; }
+    .topbar-right { display:flex; align-items:center; gap:1rem; }
+    .topbar-email { font-size:.75rem; color:var(--muted); }
+    .logout-btn {
+      background:none; border:1px solid var(--border); padding:.4rem .9rem;
+      font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--muted); cursor:pointer; font-family:'Inter',sans-serif; transition:color .2s, border-color .2s;
+    }
+    .logout-btn:hover { color:var(--bone); border-color:var(--bone); }
+
+    /* main content */
+    .main { max-width:1400px; margin:0 auto; padding:2.5rem 2rem; }
+
+    /* stats */
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; border:1px solid var(--border); background:var(--border); margin-bottom:2.5rem; }
+    .stat-card { background:var(--surface); padding:1.75rem 2rem; }
+    .stat-val { font-family:'Instrument Serif',serif; font-size:3rem; line-height:1; color:var(--bone); }
+    .stat-lbl { font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-top:.75rem; }
+    .stat-card.highlight .stat-val { color:var(--ember); }
+
+    /* tabs */
+    .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:2rem; }
+    .tab-btn {
+      background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif;
+      font-size:10px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--muted); padding:1rem 1.5rem; border-bottom:2px solid transparent;
+      margin-bottom:-1px; transition:color .2s, border-color .2s;
+    }
+    .tab-btn.active { color:var(--bone); border-bottom-color:var(--ember); }
+    .tab-btn:hover { color:var(--bone); }
+
+    /* toolbar */
+    .toolbar { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+    .search-box {
+      background:var(--surface); border:1px solid var(--border);
+      padding:.6rem 1rem; font-size:.875rem; font-family:'Inter',sans-serif;
+      color:var(--bone); outline:none; width:280px; transition:border-color .2s;
+    }
+    .search-box:focus { border-color:var(--ember); }
+    .search-box::placeholder { color:var(--muted); }
+    .filter-select {
+      background:var(--surface); border:1px solid var(--border);
+      padding:.6rem 1rem; font-size:.875rem; font-family:'Inter',sans-serif;
+      color:var(--muted); outline:none; cursor:pointer;
+    }
+    .filter-select option { background:var(--surface); }
+    .count-label { font-size:.75rem; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-left:auto; }
+
+    /* table */
+    .table-wrap { overflow-x:auto; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; }
+    thead th {
+      background:var(--surface2); text-align:left;
+      font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--muted); padding:.85rem 1rem; border-bottom:1px solid var(--border);
+      white-space:nowrap;
+    }
+    tbody tr { border-bottom:1px solid var(--border); transition:background .15s; }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover { background:var(--surface); }
+    tbody td { padding:.85rem 1rem; font-size:.8rem; color:var(--steel); vertical-align:top; }
+    td.date-cell { font-family:'JetBrains Mono',monospace; font-size:.7rem; color:var(--muted); white-space:nowrap; }
+    td.name-cell { color:var(--bone); font-weight:500; white-space:nowrap; }
+    td.email-cell { font-family:'JetBrains Mono',monospace; font-size:.72rem; }
+    td.msg-cell { max-width:260px; }
+    td.msg-cell p { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; color:var(--muted); }
+
+    /* status badge */
+    .status-select {
+      background:transparent; border:1px solid var(--border);
+      padding:.2em .6em; font-size:.65rem; font-weight:600; letter-spacing:.12em;
+      text-transform:uppercase; cursor:pointer; outline:none;
+      font-family:'JetBrains Mono',monospace; transition:border-color .2s;
+    }
+    .status-select:hover { border-color:var(--muted); }
+    .status-select.s-new       { color:var(--ember);  border-color:hsla(28,70%,58%,.4); }
+    .status-select.s-read      { color:var(--muted);  border-color:var(--border); }
+    .status-select.s-responded { color:var(--green);  border-color:hsla(142,60%,45%,.4); }
+    .status-select.s-open      { color:var(--red);    border-color:hsla(0,65%,55%,.4); }
+    .status-select.s-in-progress { color:var(--ember); border-color:hsla(28,70%,58%,.4); }
+    .status-select.s-resolved  { color:var(--green);  border-color:hsla(142,60%,45%,.4); }
+
+    /* priority badge */
+    .priority { font-family:'JetBrains Mono',monospace; font-size:.65rem; font-weight:600; letter-spacing:.1em; padding:.15em .5em; border:1px solid; }
+    .p-P1 { color:var(--red);   border-color:hsla(0,65%,55%,.5); }
+    .p-P2 { color:var(--ember); border-color:hsla(28,70%,58%,.5); }
+    .p-P3 { color:var(--muted); border-color:var(--border); }
+    .p-P4 { color:var(--muted); border-color:var(--border); }
+
+    /* ticket id */
+    .ticket-id { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--ember); white-space:nowrap; }
+
+    /* empty / loading */
+    .state-row td { text-align:center; padding:3rem; color:var(--muted); font-size:.875rem; }
+
+    /* modal (detail view) */
+    #modal-overlay {
+      display:none; position:fixed; inset:0; background:hsla(240,6%,4%,.85);
+      backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center;
+    }
+    #modal-overlay.open { display:flex; }
+    .modal {
+      background:var(--surface); border:1px solid var(--border);
+      max-width:640px; width:100%; max-height:90vh; overflow-y:auto;
+      padding:2.5rem;
+    }
+    .modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:2rem; }
+    .modal-title { font-family:'Instrument Serif',serif; font-size:1.75rem; color:var(--bone); }
+    .modal-close { background:none; border:1px solid var(--border); width:2rem; height:2rem; cursor:pointer; color:var(--muted); font-size:1rem; display:flex; align-items:center; justify-content:center; transition:color .2s, border-color .2s; flex-shrink:0; }
+    .modal-close:hover { color:var(--bone); border-color:var(--bone); }
+    .modal-field { margin-bottom:1.5rem; }
+    .modal-field-label { font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+    .modal-field-val { font-size:.9rem; color:var(--steel); line-height:1.7; white-space:pre-wrap; }
+    .modal-field-val.highlight { color:var(--bone); }
+    .modal-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+
+    /* refresh btn */
+    .refresh-btn {
+      background:none; border:1px solid var(--border); padding:.5rem 1rem;
+      font-size:10px; font-weight:600; letter-spacing:.18em; text-transform:uppercase;
+      color:var(--muted); cursor:pointer; font-family:'Inter',sans-serif; transition:all .2s;
+    }
+    .refresh-btn:hover { color:var(--bone); border-color:var(--bone); }
+
+    @media(max-width:900px){
+      .stats-row { grid-template-columns:1fr 1fr; }
+      .topbar { padding:1rem; }
+      .main { padding:1.5rem 1rem; }
+    }
+    @media(max-width:600px){
+      .stats-row { grid-template-columns:1fr; }
+      .search-box { width:100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <p class="login-logo">Dorvin</p>
+    <p class="login-sub">Admin Portal</p>
+    <label class="login-label" for="pwd">Password</label>
+    <input class="login-input" type="password" id="pwd" placeholder="Enter admin password" autocomplete="current-password" />
+    <p class="login-error" id="login-error">Incorrect password. Please try again.</p>
+    <button class="login-btn" id="login-btn">
+      <span>Sign in</span><span>→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">Dorvin</span>
+      <span class="topbar-badge">Admin</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-email" id="admin-email"></span>
+      <button class="logout-btn" id="logout-btn">Sign out</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- stats -->
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card"><p class="stat-val" id="s-total-enquiries">—</p><p class="stat-lbl">Total Enquiries</p></div>
+      <div class="stat-card highlight"><p class="stat-val" id="s-new-enquiries">—</p><p class="stat-lbl">New Enquiries</p></div>
+      <div class="stat-card"><p class="stat-val" id="s-total-tickets">—</p><p class="stat-lbl">Total Tickets</p></div>
+      <div class="stat-card highlight"><p class="stat-val" id="s-open-tickets">—</p><p class="stat-lbl">Open Tickets</p></div>
+    </div>
+
+    <!-- tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="enquiries">Enquiries</button>
+      <button class="tab-btn" data-tab="tickets">Support Tickets</button>
+    </div>
+
+    <!-- ENQUIRIES TAB -->
+    <div id="tab-enquiries">
+      <div class="toolbar">
+        <input class="search-box" id="eq-search" type="search" placeholder="Search name, email, service…" />
+        <select class="filter-select" id="eq-filter">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="read">Read</option>
+          <option value="responded">Responded</option>
+        </select>
+        <button class="refresh-btn" id="eq-refresh">↺ Refresh</button>
+        <span class="count-label" id="eq-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Service</th>
+              <th>Message</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="eq-tbody">
+            <tr class="state-row"><td colspan="6">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TICKETS TAB -->
+    <div id="tab-tickets" style="display:none">
+      <div class="toolbar">
+        <input class="search-box" id="tk-search" type="search" placeholder="Search ticket ID, company, email…" />
+        <select class="filter-select" id="tk-filter">
+          <option value="">All statuses</option>
+          <option value="open">Open</option>
+          <option value="in-progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+        </select>
+        <select class="filter-select" id="tk-priority">
+          <option value="">All priorities</option>
+          <option value="P1">P1 — Critical</option>
+          <option value="P2">P2 — High</option>
+          <option value="P3">P3 — Normal</option>
+          <option value="P4">P4 — Low</option>
+        </select>
+        <button class="refresh-btn" id="tk-refresh">↺ Refresh</button>
+        <span class="count-label" id="tk-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Ticket ID</th>
+              <th>Company</th>
+              <th>Email</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Subject</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tk-tbody">
+            <tr class="state-row"><td colspan="8">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ── DETAIL MODAL ── -->
+<div id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Detail</h2>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   ▶ CONFIGURATION — paste your Supabase values here
+   ════════════════════════════════════════════════════ */
+const SUPABASE_URL      = 'YOUR_SUPABASE_URL';        // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';   // Settings → API → anon public
+const ADMIN_EMAIL       = 'admin@dorvin.in';           // the user you created in Auth
+
+/* ═══════════════════════════════════════════════════ */
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allEnquiries = [];
+let allTickets   = [];
+
+/* ── UTILS ── */
+function fmt(ts){ const d=new Date(ts); return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+' '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── LOGIN ── */
+document.getElementById('login-btn').addEventListener('click', signIn);
+document.getElementById('pwd').addEventListener('keydown', e => { if(e.key==='Enter') signIn(); });
+
+async function signIn(){
+  const pwd = document.getElementById('pwd').value.trim();
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  if(!pwd){ err.textContent='Please enter your password.'; err.classList.add('show'); return; }
+  btn.disabled = true; btn.querySelector('span').textContent = 'Signing in…';
+  err.classList.remove('show');
+  const { data, error } = await db.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pwd });
+  btn.disabled = false; btn.querySelector('span').textContent = 'Sign in';
+  if(error){ err.textContent = 'Incorrect password. Please try again.'; err.classList.add('show'); return; }
+  showDashboard(data.user);
+}
+
+/* check existing session on load */
+db.auth.getSession().then(({ data }) => {
+  if(data.session) showDashboard(data.session.user);
+});
+
+/* ── DASHBOARD ── */
+function showDashboard(user){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('admin-email').textContent = user.email;
+  loadEnquiries();
+  loadTickets();
+}
+
+document.getElementById('logout-btn').addEventListener('click', async () => {
+  await db.auth.signOut();
+  location.reload();
+});
+
+/* ── TABS ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('tab-enquiries').style.display = tab==='enquiries' ? 'block' : 'none';
+    document.getElementById('tab-tickets').style.display   = tab==='tickets'   ? 'block' : 'none';
+  });
+});
+
+/* ── LOAD ENQUIRIES ── */
+async function loadEnquiries(){
+  const tbody = document.getElementById('eq-tbody');
+  tbody.innerHTML = '<tr class="state-row"><td colspan="6">Loading…</td></tr>';
+  const { data, error } = await db
+    .from('contact_submissions')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if(error){ tbody.innerHTML = `<tr class="state-row"><td colspan="6">Error: ${esc(error.message)}</td></tr>`; return; }
+  allEnquiries = data || [];
+  renderEnquiries();
+  updateStats();
+}
+
+document.getElementById('eq-refresh').addEventListener('click', loadEnquiries);
+document.getElementById('eq-search').addEventListener('input', renderEnquiries);
+document.getElementById('eq-filter').addEventListener('change', renderEnquiries);
+
+function renderEnquiries(){
+  const q   = document.getElementById('eq-search').value.toLowerCase();
+  const st  = document.getElementById('eq-filter').value;
+  const rows = allEnquiries.filter(r => {
+    const matchQ = !q || [r.first_name,r.last_name,r.email,r.service,r.message].join(' ').toLowerCase().includes(q);
+    const matchS = !st || r.status === st;
+    return matchQ && matchS;
+  });
+  document.getElementById('eq-count').textContent = rows.length + ' record' + (rows.length!==1?'s':'');
+  const tbody = document.getElementById('eq-tbody');
+  if(!rows.length){ tbody.innerHTML='<tr class="state-row"><td colspan="6">No records found.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r => `
+    <tr data-id="${r.id}" data-type="enquiry" class="row-clickable" style="cursor:pointer">
+      <td class="date-cell">${fmt(r.created_at)}</td>
+      <td class="name-cell">${esc(r.first_name)} ${esc(r.last_name)}</td>
+      <td class="email-cell"><a href="mailto:${esc(r.email)}" style="color:var(--steel);text-decoration:none" onclick="event.stopPropagation()">${esc(r.email)}</a></td>
+      <td>${esc(r.service||'—')}</td>
+      <td class="msg-cell"><p>${esc(r.message||'')}</p></td>
+      <td>
+        <select class="status-select s-${esc(r.status)}" data-id="${r.id}" data-table="contact_submissions" onclick="event.stopPropagation()">
+          <option value="new"       ${r.status==='new'?'selected':''}>New</option>
+          <option value="read"      ${r.status==='read'?'selected':''}>Read</option>
+          <option value="responded" ${r.status==='responded'?'selected':''}>Responded</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+  bindStatusSelects('eq-tbody');
+  bindRowClick('eq-tbody', 'enquiry');
+}
+
+/* ── LOAD TICKETS ── */
+async function loadTickets(){
+  const tbody = document.getElementById('tk-tbody');
+  tbody.innerHTML = '<tr class="state-row"><td colspan="8">Loading…</td></tr>';
+  const { data, error } = await db
+    .from('support_tickets')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if(error){ tbody.innerHTML = `<tr class="state-row"><td colspan="8">Error: ${esc(error.message)}</td></tr>`; return; }
+  allTickets = data || [];
+  renderTickets();
+  updateStats();
+}
+
+document.getElementById('tk-refresh').addEventListener('click', loadTickets);
+document.getElementById('tk-search').addEventListener('input', renderTickets);
+document.getElementById('tk-filter').addEventListener('change', renderTickets);
+document.getElementById('tk-priority').addEventListener('change', renderTickets);
+
+function renderTickets(){
+  const q   = document.getElementById('tk-search').value.toLowerCase();
+  const st  = document.getElementById('tk-filter').value;
+  const pri = document.getElementById('tk-priority').value;
+  const rows = allTickets.filter(r => {
+    const matchQ = !q || [r.ticket_id,r.company,r.email,r.subject,r.description,r.customer_id].join(' ').toLowerCase().includes(q);
+    const matchS = !st  || r.status   === st;
+    const matchP = !pri || r.priority === pri;
+    return matchQ && matchS && matchP;
+  });
+  document.getElementById('tk-count').textContent = rows.length + ' record' + (rows.length!==1?'s':'');
+  const tbody = document.getElementById('tk-tbody');
+  if(!rows.length){ tbody.innerHTML='<tr class="state-row"><td colspan="8">No records found.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r => `
+    <tr data-id="${r.id}" data-type="ticket" class="row-clickable" style="cursor:pointer">
+      <td class="date-cell">${fmt(r.created_at)}</td>
+      <td class="ticket-id">${esc(r.ticket_id||'—')}</td>
+      <td class="name-cell">${esc(r.company||'—')}</td>
+      <td class="email-cell"><a href="mailto:${esc(r.email)}" style="color:var(--steel);text-decoration:none" onclick="event.stopPropagation()">${esc(r.email)}</a></td>
+      <td>${esc(r.category||'—')}</td>
+      <td><span class="priority p-${esc(r.priority)}">${esc(r.priority||'—')}</span></td>
+      <td style="max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${esc(r.subject||'—')}</td>
+      <td>
+        <select class="status-select s-${esc(r.status)}" data-id="${r.id}" data-table="support_tickets" onclick="event.stopPropagation()">
+          <option value="open"        ${r.status==='open'?'selected':''}>Open</option>
+          <option value="in-progress" ${r.status==='in-progress'?'selected':''}>In Progress</option>
+          <option value="resolved"    ${r.status==='resolved'?'selected':''}>Resolved</option>
+        </select>
+      </td>
+    </tr>
+  `).join('');
+  bindStatusSelects('tk-tbody');
+  bindRowClick('tk-tbody', 'ticket');
+}
+
+/* ── STATUS UPDATE ── */
+function bindStatusSelects(tbodyId){
+  document.getElementById(tbodyId).querySelectorAll('.status-select').forEach(sel => {
+    sel.addEventListener('change', async function(){
+      const id    = this.dataset.id;
+      const table = this.dataset.table;
+      const val   = this.value;
+      this.className = `status-select s-${val}`;
+      const { error } = await db.from(table).update({ status: val }).eq('id', id);
+      if(error){ alert('Failed to update status: ' + error.message); return; }
+      if(table==='contact_submissions') allEnquiries.find(r=>r.id===id).status = val;
+      else allTickets.find(r=>r.id===id).status = val;
+      updateStats();
+    });
+  });
+}
+
+/* ── ROW CLICK → MODAL ── */
+function bindRowClick(tbodyId, type){
+  document.getElementById(tbodyId).querySelectorAll('tr[data-id]').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = row.dataset.id;
+      if(type==='enquiry'){
+        const r = allEnquiries.find(x=>x.id===id);
+        if(!r) return;
+        document.getElementById('modal-title').textContent = (r.first_name||'') + ' ' + (r.last_name||'');
+        document.getElementById('modal-body').innerHTML = `
+          <div class="modal-grid2">
+            <div class="modal-field"><p class="modal-field-label">Date</p><p class="modal-field-val">${fmt(r.created_at)}</p></div>
+            <div class="modal-field"><p class="modal-field-label">Status</p><p class="modal-field-val highlight">${esc(r.status)}</p></div>
+          </div>
+          <div class="modal-grid2">
+            <div class="modal-field"><p class="modal-field-label">Email</p><p class="modal-field-val"><a href="mailto:${esc(r.email)}" style="color:var(--ember)">${esc(r.email)}</a></p></div>
+            <div class="modal-field"><p class="modal-field-label">Service</p><p class="modal-field-val">${esc(r.service||'—')}</p></div>
+          </div>
+          <div class="modal-field"><p class="modal-field-label">Message</p><p class="modal-field-val">${esc(r.message||'—')}</p></div>
+        `;
+      } else {
+        const r = allTickets.find(x=>x.id===id);
+        if(!r) return;
+        document.getElementById('modal-title').textContent = r.ticket_id || 'Ticket';
+        document.getElementById('modal-body').innerHTML = `
+          <div class="modal-grid2">
+            <div class="modal-field"><p class="modal-field-label">Date</p><p class="modal-field-val">${fmt(r.created_at)}</p></div>
+            <div class="modal-field"><p class="modal-field-label">Priority</p><p class="modal-field-val highlight">${esc(r.priority||'—')}</p></div>
+          </div>
+          <div class="modal-grid2">
+            <div class="modal-field"><p class="modal-field-label">Customer ID</p><p class="modal-field-val">${esc(r.customer_id||'—')}</p></div>
+            <div class="modal-field"><p class="modal-field-label">Company</p><p class="modal-field-val">${esc(r.company||'—')}</p></div>
+          </div>
+          <div class="modal-grid2">
+            <div class="modal-field"><p class="modal-field-label">Email</p><p class="modal-field-val"><a href="mailto:${esc(r.email)}" style="color:var(--ember)">${esc(r.email)}</a></p></div>
+            <div class="modal-field"><p class="modal-field-label">Category</p><p class="modal-field-val">${esc(r.category||'—')}</p></div>
+          </div>
+          <div class="modal-field"><p class="modal-field-label">Subject</p><p class="modal-field-val highlight">${esc(r.subject||'—')}</p></div>
+          <div class="modal-field"><p class="modal-field-label">Description</p><p class="modal-field-val">${esc(r.description||'—')}</p></div>
+          <div class="modal-field"><p class="modal-field-label">Status</p><p class="modal-field-val">${esc(r.status||'—')}</p></div>
+        `;
+      }
+      document.getElementById('modal-overlay').classList.add('open');
+    });
+  });
+}
+document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal-overlay').classList.remove('open'));
+document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) e.currentTarget.classList.remove('open'); });
+
+/* ── STATS ── */
+function updateStats(){
+  document.getElementById('s-total-enquiries').textContent = allEnquiries.length;
+  document.getElementById('s-new-enquiries').textContent   = allEnquiries.filter(r=>r.status==='new').length;
+  document.getElementById('s-total-tickets').textContent   = allTickets.length;
+  document.getElementById('s-open-tickets').textContent    = allTickets.filter(r=>r.status==='open').length;
+}
+</script>
+</body>
+</html>
