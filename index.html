@@ -85,7 +85,7 @@
 
     /* ── NAV ── */
     #nav {
-      position:fixed; inset-x:0; top:0; z-index:100;
+      position:fixed; left:0; right:0; top:0; z-index:100;
       transition:background .5s, border-color .5s;
     }
     #nav.scrolled {
@@ -95,12 +95,16 @@
       border-bottom:1px solid var(--border);
     }
     .nav-inner {
+      position:relative;
       max-width:1440px; margin:0 auto;
       display:flex; align-items:center; justify-content:space-between;
       padding:1.25rem 3rem;
     }
     .nav-logo { font-family:'Instrument Serif',serif; font-size:1.5rem; letter-spacing:-0.02em; color:var(--bone); text-decoration:none; }
-    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links {
+      position:absolute; left:50%; transform:translateX(-50%);
+      display:flex; gap:2.5rem; list-style:none;
+    }
     .nav-links a { font-size:10px; font-weight:600; letter-spacing:0.24em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color .2s; }
     .nav-links a:hover { color:var(--bone); }
     .nav-cta {
