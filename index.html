@@ -239,7 +239,6 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
       padding: 64px 0 0;
       position: relative;
       overflow: hidden;
@@ -253,10 +252,14 @@
     .hero-bg-vignette {
       position: absolute; pointer-events: none; z-index: 0;
     }
-    /* Radial gradient: subtle lighter top-center glow */
+    /* Multi-layer warm amber glow */
     .hero-bg-gradient {
       inset: 0;
-      background: radial-gradient(at 50% 0%, var(--surface) 0%, var(--bg) 70%);
+      background:
+        radial-gradient(ellipse 110% 55% at 50% -5%,  hsla(28,40%,18%,0.90) 0%, transparent 65%),
+        radial-gradient(ellipse 60%  50% at 12% 100%, hsla(28,60%,22%,0.55) 0%, transparent 55%),
+        radial-gradient(ellipse 50%  40% at 88% 105%, hsla(28,40%,14%,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse 80%  80% at 50%  50%, hsla(240,6%,6%,0.50)  0%, transparent 70%);
     }
     /* Grid lines: bone-coloured at 6% opacity */
     .hero-bg-grid {
@@ -270,8 +273,18 @@
     /* Animated amber vertical scan line */
     .hero-bg-scan {
       top: 0; bottom: 0; left: 0; width: 2px;
-      background: linear-gradient(to bottom, transparent, hsla(28,70%,58%,0.6), transparent);
-      animation: hero-scan 8s linear infinite;
+      background: linear-gradient(to bottom, transparent 0%, hsla(28,80%,60%,0.85) 50%, transparent 100%);
+      filter: blur(0.5px);
+      animation: hero-scan 7s linear infinite;
+    }
+    /* Second, softer trailing glow on the scan */
+    .hero-bg-scan::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: -8px; right: -8px;
+      background: linear-gradient(to bottom, transparent 0%, hsla(28,70%,58%,0.18) 50%, transparent 100%);
+      filter: blur(6px);
     }
     /* Grain / dot texture */
     .hero-bg-grain {
@@ -312,16 +325,15 @@
     }
 
     .hero-inner {
+      flex: 1;
       max-width: 1280px;
       margin: 0 auto;
       width: 100%;
-      padding: 0 2.5rem;
+      padding: 4rem 2.5rem 3rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 5rem;
-      align-items: flex-end;
-      padding-top: 8rem;
-      padding-bottom: 4rem;
+      align-items: center;
     }
 
     .hero-badge {
@@ -343,11 +355,11 @@
 
     .hero-heading {
       font-family: 'Instrument Serif', serif;
-      font-size: clamp(3rem, 5.5vw, 5.2rem);
+      font-size: clamp(3.4rem, 6.2vw, 6.4rem);
       font-weight: 400;
-      line-height: 1.08;
+      line-height: 1.06;
       color: var(--bone);
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
     }
     .hero-heading em { font-style: italic; }
 
@@ -355,8 +367,7 @@
       display: flex;
       flex-direction: column;
       gap: 2rem;
-      justify-content: flex-end;
-      padding-bottom: 0.3rem;
+      justify-content: center;
     }
 
     .hero-desc {
@@ -1032,7 +1043,7 @@
     @media (max-width: 860px) {
       .nav-center { display: none; }
       .nav-hamburger { display: flex; }
-      .hero-inner { grid-template-columns: 1fr; gap: 2rem; padding-top: 5rem; }
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2.5rem 2rem; }
       .hero-corner.tr, .hero-corner.br { display: none; }
       .hero-live { display: none; }
       .about-2col { grid-template-columns: 1fr; gap: 2rem; }
