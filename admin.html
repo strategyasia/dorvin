@@ -413,7 +413,7 @@ async function signIn(){
   err.classList.remove('show');
   const { data, error } = await db.auth.signInWithPassword({ email: ADMIN_EMAIL, password: pwd });
   btn.disabled = false; btn.querySelector('span').textContent = 'Sign in';
-  if(error){ err.textContent = 'Incorrect password. Please try again.'; err.classList.add('show'); return; }
+  if(error){ err.textContent = error.message; err.classList.add('show'); return; }
   showDashboard(data.user);
 }
 
