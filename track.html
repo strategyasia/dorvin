@@ -111,7 +111,27 @@
     .submit-btn:disabled{opacity:.5;cursor:not-allowed}
     .submit-note{font-size:.75rem;color:var(--muted)}
 
-    /* SUCCESS TOAST */
+    /* INLINE FIELD ERROR */
+    .u-field input.err,.u-field textarea.err{border-color:hsl(0,62%,52%) !important}
+    .u-field .field-err{display:none;font-size:.72rem;color:hsl(0,62%,52%);margin-top:.35rem}
+    .u-field .field-err.show{display:block}
+
+    /* INLINE FORM ERROR BAR (between body and footer) */
+    .form-err-bar{
+      display:none;align-items:center;gap:.75rem;
+      background:hsla(0,62%,52%,.08);border-top:1px solid hsla(0,62%,52%,.25);border-bottom:1px solid hsla(0,62%,52%,.25);
+      padding:.85rem 1.75rem;font-size:.82rem;color:hsl(0,62%,68%);line-height:1.5;
+    }
+    .form-err-bar.show{display:flex}
+    .form-err-bar svg{flex-shrink:0;width:15px;height:15px;stroke:hsl(0,62%,52%);fill:none;stroke-width:2}
+
+    /* INLINE SEARCH ERROR */
+    .search-err{
+      display:none;text-align:center;margin-top:.6rem;font-size:.78rem;color:hsl(0,62%,68%);
+    }
+    .search-err.show{display:block}
+
+    /* SUCCESS TOAST (positive only) */
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.82rem;color:var(--text);z-index:999;transform:translateY(4rem);opacity:0;transition:all .3s;max-width:300px;pointer-events:none}
     #toast.show{transform:none;opacity:1}
 
@@ -160,6 +180,7 @@
     <button class="search-btn" id="lookup-btn">Look up →</button>
   </div>
   <p class="search-hint">Your ticket ID was shown after you submitted your support request.</p>
+  <p class="search-err" id="search-err">Please enter a ticket ID — e.g. DRV-A1B2C3</p>
 </div>
 
 <!-- MAIN -->
@@ -233,16 +254,24 @@
           <div class="u-field">
             <label>Your Name *</label>
             <input type="text" id="u-name" placeholder="Full name" />
+            <p class="field-err" id="err-name">Please enter your name.</p>
           </div>
           <div class="u-field">
             <label>Your Email *</label>
             <input type="email" id="u-email" placeholder="email@company.com" />
+            <p class="field-err" id="err-email">Please enter a valid email address.</p>
           </div>
         </div>
         <div class="u-field">
           <label>Additional Details *</label>
           <textarea id="u-message" rows="5" placeholder="Describe any updates, new symptoms, error messages, or context that might help us resolve your ticket faster…"></textarea>
+          <p class="field-err" id="err-message">Please describe the additional details.</p>
         </div>
+      </div>
+      <!-- Inline error bar -->
+      <div class="form-err-bar" id="form-err-bar">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="form-err-msg">Please fill in all required fields before sending.</span>
       </div>
       <div class="update-foot">
         <p class="submit-note">Reply to <span id="u-ticket-ref" style="font-family:'JetBrains Mono',monospace;color:var(--ember)">—</span></p>
@@ -418,12 +447,41 @@
     await loadComments(data.ticket_id);
   }
 
+  /* ── HELPERS: inline errors ── */
+  function clearFieldErr(inputId, errId){
+    const el = $(inputId); if(el){ el.classList.remove('err'); }
+    const er = $(errId);   if(er){ er.classList.remove('show'); }
+  }
+  function showFieldErr(inputId, errId){
+    const el = $(inputId); if(el){ el.classList.add('err'); el.focus(); }
+    const er = $(errId);   if(er){ er.classList.add('show'); }
+  }
+  function setFormErr(msg){
+    $('form-err-msg').textContent = msg;
+    $('form-err-bar').classList.add('show');
+    $('form-err-bar').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  function clearFormErr(){
+    $('form-err-bar').classList.remove('show');
+  }
+
   /* ── SEARCH ── */
   $('lookup-btn').addEventListener('click', ()=>{
     const val = $('ticket-input').value.trim();
-    if(!val){ toast('Enter a ticket ID first.', true); return; }
+    if(!val){
+      $('ticket-input').style.borderColor = 'hsl(0,62%,52%)';
+      $('search-err').classList.add('show');
+      $('ticket-input').focus();
+      return;
+    }
+    $('ticket-input').style.borderColor = '';
+    $('search-err').classList.remove('show');
     loadTicket(val);
     history.replaceState(null,'','?id='+encodeURIComponent(val.toUpperCase()));
+  });
+  $('ticket-input').addEventListener('input', ()=>{
+    $('ticket-input').style.borderColor = '';
+    $('search-err').classList.remove('show');
   });
   $('ticket-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('lookup-btn').click(); });
 
@@ -433,9 +491,24 @@
     const name    = $('u-name').value.trim();
     const email   = $('u-email').value.trim();
     const message = $('u-message').value.trim();
-    if(!name || !email || !message){
-      toast('Please fill in all fields.', true); return;
+
+    // Clear previous errors
+    clearFieldErr('u-name','err-name');
+    clearFieldErr('u-email','err-email');
+    clearFieldErr('u-message','err-message');
+    clearFormErr();
+
+    // Validate each field individually
+    let firstErr = null;
+    if(!message){ showFieldErr('u-message','err-message'); firstErr = firstErr||'u-message'; }
+    if(!email || !/\S+@\S+\.\S+/.test(email)){ showFieldErr('u-email','err-email'); firstErr = firstErr||'u-email'; }
+    if(!name){ showFieldErr('u-name','err-name'); firstErr = firstErr||'u-name'; }
+
+    if(firstErr){
+      setFormErr('Please fill in all required fields before sending your update.');
+      return;
     }
+
     $('u-btn-text').textContent = 'Sending…';
     $('u-submit').disabled = true;
 
@@ -450,14 +523,23 @@
     $('u-btn-text').textContent = 'Send Update';
     $('u-submit').disabled = false;
 
-    if(error){ toast('Failed to send. Please try again.', true); return; }
+    if(error){
+      setFormErr('Something went wrong — please try again or email support@dorvin.in');
+      return;
+    }
 
-    // Render immediately (realtime may also fire — we check for duplicates)
+    clearFormErr();
     appendComment(inserted);
     $('u-name').value = '';
     $('u-email').value = '';
     $('u-message').value = '';
     toast('Update sent — our team has been notified.');
+  });
+
+  // Clear field errors on input
+  ['u-name','u-email','u-message'].forEach(id=>{
+    const errMap = {'u-name':'err-name','u-email':'err-email','u-message':'err-message'};
+    $(id).addEventListener('input', ()=>{ clearFieldErr(id, errMap[id]); clearFormErr(); });
   });
 
   /* ── AUTO-LOAD FROM URL ── */
