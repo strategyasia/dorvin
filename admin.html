@@ -236,6 +236,102 @@
     .m-reply-send:hover{background:transparent;color:var(--ember)}
     .m-reply-send:disabled{opacity:.5;cursor:not-allowed}
 
+    /* ── CMD BANNER ── */
+    #cmd-banner{
+      position:relative;overflow:hidden;
+      background:var(--surface);
+      border-bottom:1px solid var(--border);
+      padding:2rem 1.75rem 1.75rem;
+    }
+    /* ember top line */
+    #cmd-banner::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:1px;
+      background:linear-gradient(90deg,transparent 0%,hsl(28,70%,58%) 35%,hsl(28,70%,58%) 65%,transparent 100%);
+    }
+    /* ghost wordmark behind everything */
+    .cmd-ghost{
+      position:absolute;right:-1rem;top:50%;transform:translateY(-50%);
+      font-family:'Instrument Serif',serif;font-size:clamp(5rem,12vw,9rem);line-height:1;
+      color:transparent;-webkit-text-stroke:1px hsla(30,12%,92%,.04);
+      letter-spacing:-.03em;pointer-events:none;user-select:none;white-space:nowrap;
+    }
+    /* scan beam */
+    .cmd-scan{
+      position:absolute;top:0;bottom:0;width:120px;
+      background:linear-gradient(90deg,transparent,hsla(28,70%,58%,.045),transparent);
+      animation:cmd-sweep 7s ease-in-out infinite;pointer-events:none;
+    }
+    @keyframes cmd-sweep{
+      0%{left:-120px;opacity:0} 5%{opacity:1}
+      95%{opacity:1} 100%{left:calc(100% + 120px);opacity:0}
+    }
+    /* layout */
+    .cmd-inner{
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:center;
+    }
+    @media(min-width:700px){.cmd-inner{grid-template-columns:1fr auto auto;gap:2.5rem}}
+    /* left */
+    .cmd-greeting{
+      font-family:'Instrument Serif',serif;font-size:clamp(1.5rem,3.5vw,2.25rem);
+      color:var(--bone);line-height:1;letter-spacing:-.01em;
+    }
+    .cmd-greeting em{font-style:italic;color:var(--ember)}
+    .cmd-status-row{
+      display:flex;align-items:center;gap:1rem;margin-top:.65rem;flex-wrap:wrap;
+    }
+    .cmd-pill{
+      display:inline-flex;align-items:center;gap:.35rem;
+      font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;
+      letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    }
+    .cmd-pill.live .cmd-dot{background:var(--green);animation:live-blink 2s ease-in-out infinite}
+    .cmd-pill.warn .cmd-dot{background:var(--ember);animation:live-blink 1.4s ease-in-out infinite}
+    .cmd-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    @keyframes live-blink{0%,100%{opacity:.35}50%{opacity:1}}
+    .cmd-divider{width:1px;height:.9rem;background:var(--border);display:none}
+    @media(min-width:480px){.cmd-divider{display:block}}
+    /* center — clock */
+    .cmd-clock-block{
+      display:none;flex-direction:column;align-items:center;gap:.35rem;
+      padding:0 2rem;border-left:1px solid var(--border);border-right:1px solid var(--border);
+    }
+    @media(min-width:700px){.cmd-clock-block{display:flex}}
+    .cmd-time{
+      font-family:'JetBrains Mono',monospace;font-size:1.55rem;font-weight:500;
+      color:var(--bone);letter-spacing:.06em;line-height:1;
+    }
+    .cmd-tz{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.2rem}
+    /* right — date */
+    .cmd-date-block{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem}
+    .cmd-day-name{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+    .cmd-date-num{font-family:'Instrument Serif',serif;font-size:1.65rem;color:var(--bone);line-height:1}
+    .cmd-month{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}
+    /* ticker */
+    .cmd-ticker{
+      position:relative;z-index:1;
+      margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);
+      display:flex;align-items:center;gap:1rem;overflow:hidden;
+    }
+    .cmd-ticker-label{
+      font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;
+      letter-spacing:.2em;text-transform:uppercase;color:var(--ember);
+      white-space:nowrap;flex-shrink:0;
+    }
+    .cmd-ticker-track{flex:1;overflow:hidden;position:relative}
+    .cmd-ticker-inner{
+      display:flex;gap:3rem;width:max-content;
+      animation:ticker-scroll 30s linear infinite;
+    }
+    .cmd-ticker-inner:hover{animation-play-state:paused}
+    @keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .cmd-ticker-item{
+      font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);
+      white-space:nowrap;display:flex;align-items:center;gap:.5rem;
+    }
+    .cmd-ticker-item span.hi{color:var(--steel)}
+    .cmd-ticker-item span.em{color:var(--ember)}
+
     /* TOAST */
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.82rem;color:var(--text);z-index:999;transform:translateY(4rem);opacity:0;transition:all .3s;max-width:300px;pointer-events:none}
     #toast.show{transform:none;opacity:1}
@@ -291,6 +387,46 @@
       <button class="logout-btn" id="logout-btn">Sign out</button>
     </div>
   </header>
+
+  <!-- CMD BANNER -->
+  <div id="cmd-banner">
+    <span class="cmd-ghost">DORVIN</span>
+    <div class="cmd-scan"></div>
+    <div class="cmd-inner">
+      <!-- Left: greeting + status -->
+      <div>
+        <h2 class="cmd-greeting" id="cmd-greeting">Good morning.</h2>
+        <div class="cmd-status-row">
+          <span class="cmd-pill live"><span class="cmd-dot"></span>Realtime connected</span>
+          <span class="cmd-divider"></span>
+          <span class="cmd-pill" id="cmd-last-seen"><span class="cmd-dot"></span>Loading…</span>
+          <span class="cmd-divider"></span>
+          <span class="cmd-pill"><span class="cmd-dot"></span>ceo@dorvin.in</span>
+        </div>
+      </div>
+      <!-- Center: clock -->
+      <div class="cmd-clock-block">
+        <span class="cmd-time" id="cmd-time">00:00:00</span>
+        <span class="cmd-tz">IST</span>
+      </div>
+      <!-- Right: date -->
+      <div class="cmd-date-block">
+        <span class="cmd-day-name" id="cmd-day-name">—</span>
+        <span class="cmd-date-num" id="cmd-date-num">—</span>
+        <span class="cmd-month" id="cmd-month">—</span>
+      </div>
+    </div>
+    <!-- Ticker -->
+    <div class="cmd-ticker">
+      <span class="cmd-ticker-label">↻ Activity</span>
+      <div class="cmd-ticker-track">
+        <div class="cmd-ticker-inner" id="cmd-ticker-inner">
+          <span class="cmd-ticker-item"><span class="em">⬤</span> Loading recent activity…</span>
+          <span class="cmd-ticker-item"><span class="em">⬤</span> Loading recent activity…</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <main class="main">
     <!-- Stats -->
@@ -458,6 +594,86 @@ function launch(user){
   $('dashboard').style.display='block';
   $('admin-email').textContent = user.email;
   loadEnquiries(); loadTickets();
+  initBanner();
+}
+
+/* ── CMD BANNER ── */
+function initBanner(){
+  // Greeting based on hour (IST = UTC+5:30)
+  function getGreeting(){
+    const h = new Date(Date.now() + (5.5*3600*1000 - new Date().getTimezoneOffset()*60000)).getUTCHours();
+    if(h < 5)  return 'Working late,';
+    if(h < 12) return 'Good morning.';
+    if(h < 17) return 'Good afternoon.';
+    if(h < 21) return 'Good evening.';
+    return 'Working late,';
+  }
+  $('cmd-greeting').innerHTML = getGreeting().replace(/\.$/, '.<em></em>');
+  $('cmd-greeting').textContent = getGreeting();
+
+  // Live clock
+  function tickClock(){
+    const now = new Date();
+    // IST
+    const ist = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+    const hh = String(ist.getHours()).padStart(2,'0');
+    const mm = String(ist.getMinutes()).padStart(2,'0');
+    const ss = String(ist.getSeconds()).padStart(2,'0');
+    $('cmd-time').textContent = hh+':'+mm+':'+ss;
+    // Date parts
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    $('cmd-day-name').textContent = days[ist.getDay()];
+    $('cmd-date-num').textContent = ist.getDate();
+    $('cmd-month').textContent = months[ist.getMonth()]+' '+ist.getFullYear();
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // Last-seen pill updated after data loads
+  window._bannerRefresh = function(){
+    const all = [...enquiries, ...tickets];
+    if(!all.length){ $('cmd-last-seen').innerHTML='<span class="cmd-dot"></span>No activity yet'; return; }
+    all.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    const latest = all[0];
+    const when = new Date(latest.created_at);
+    const diffM = Math.round((Date.now()-when)/60000);
+    const ago = diffM < 1 ? 'just now' : diffM < 60 ? diffM+'m ago' : Math.round(diffM/60)+'h ago';
+    const name = latest.first_name ? latest.first_name+' '+latest.last_name : (latest.ticket_id||'Unknown');
+    $('cmd-last-seen').innerHTML='<span class="cmd-dot"></span>Last: <span style="color:var(--steel)">'+name+'</span> · '+ago;
+    buildTicker();
+  };
+
+  // Ticker
+  function buildTicker(){
+    const items = [];
+    const sorted = [...enquiries].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+    const tsorted = [...tickets].sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+    sorted.forEach(r=>{
+      const ago = fmtAgo(r.created_at);
+      items.push(`<span class="cmd-ticker-item"><span class="em">◈</span> Enquiry from <span class="hi">${esc(r.first_name||'')} ${esc(r.last_name||'')}</span> · ${esc(r.service||'—')} · <span class="em">${ago}</span></span>`);
+    });
+    tsorted.forEach(r=>{
+      const ago = fmtAgo(r.created_at);
+      const prColor = r.priority==='critical'?'color:var(--red)':r.priority==='high'?'color:var(--ember)':'';
+      items.push(`<span class="cmd-ticker-item"><span class="em">◇</span> Ticket <span class="hi">${esc(r.ticket_id||'')}</span> · ${esc(r.company||'—')} · <span style="${prColor}">${esc(r.priority||'—')}</span> · <span class="em">${ago}</span></span>`);
+    });
+    if(!items.length){ items.push('<span class="cmd-ticker-item"><span class="em">⬤</span> No recent activity</span>'); }
+    // Duplicate for seamless loop
+    const doubled = [...items,...items].join('');
+    $('cmd-ticker-inner').innerHTML = doubled;
+    // Adjust animation speed based on content
+    const spd = Math.max(18, items.length * 6);
+    $('cmd-ticker-inner').style.animationDuration = spd+'s';
+  }
+
+  function fmtAgo(ts){
+    const diff = Math.round((Date.now()-new Date(ts))/60000);
+    if(diff < 1) return 'just now';
+    if(diff < 60) return diff+'m ago';
+    if(diff < 1440) return Math.round(diff/60)+'h ago';
+    return Math.round(diff/1440)+'d ago';
+  }
 }
 
 $('logout-btn').onclick = async ()=>{ await db.auth.signOut(); location.reload(); };
@@ -496,6 +712,7 @@ async function loadEnquiries(){
   if(error){ $('eq-body').innerHTML=`<tr class="state-row"><td colspan="8">Error: ${esc(error.message)}</td></tr>`; return; }
   enquiries = data||[];
   renderEnquiries(); updateStats();
+  if(window._bannerRefresh) window._bannerRefresh();
 }
 async function loadTickets(){
   $('tk-body').innerHTML='<tr class="state-row"><td colspan="10">Loading…</td></tr>';
@@ -503,6 +720,7 @@ async function loadTickets(){
   if(error){ $('tk-body').innerHTML=`<tr class="state-row"><td colspan="10">Error: ${esc(error.message)}</td></tr>`; return; }
   tickets = data||[];
   renderTickets(); updateStats();
+  if(window._bannerRefresh) window._bannerRefresh();
 }
 
 $('eq-refresh').onclick = loadEnquiries;
@@ -903,10 +1121,12 @@ db.channel('admin-live')
   .on('postgres_changes',{event:'INSERT',schema:'public',table:'contact_submissions'}, p=>{
     enquiries.unshift(p.new); renderEnquiries(); updateStats();
     toast('New enquiry from '+p.new.first_name+' '+p.new.last_name);
+    if(window._bannerRefresh) window._bannerRefresh();
   })
   .on('postgres_changes',{event:'INSERT',schema:'public',table:'support_tickets'}, p=>{
     tickets.unshift(p.new); renderTickets(); updateStats();
     toast('New ticket '+p.new.ticket_id+' — '+p.new.priority);
+    if(window._bannerRefresh) window._bannerRefresh();
   })
   .subscribe();
 </script>
