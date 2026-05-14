@@ -209,6 +209,33 @@
     .m-status-sel{background:var(--bg);border:1px solid var(--border);padding:.5rem .8rem;font-size:.8rem;font-family:'Inter',sans-serif;color:var(--bone);outline:none;cursor:pointer;margin-left:auto}
     .m-status-sel option{background:var(--surface)}
 
+    /* TICKET THREAD (inside modal) */
+    .m-thread-wrap{margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+    .m-thread-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+    .m-thread{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);max-height:300px;overflow-y:auto}
+    .m-thread::-webkit-scrollbar{width:4px}
+    .m-thread::-webkit-scrollbar-track{background:var(--bg)}
+    .m-thread::-webkit-scrollbar-thumb{background:var(--border)}
+    .m-cmt{background:var(--surface);padding:1rem 1.25rem}
+    .m-cmt.admin-cmt{background:hsla(28,70%,58%,.06);border-left:2px solid var(--ember)}
+    .m-cmt-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap}
+    .m-cmt-author{font-size:.75rem;font-weight:600;color:var(--bone)}
+    .m-cmt.admin-cmt .m-cmt-author{color:var(--ember)}
+    .m-cmt-role{font-size:.7rem;color:var(--muted)}
+    .m-cmt-time{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);margin-left:auto}
+    .m-cmt-body{font-size:.8rem;color:var(--muted);line-height:1.65;white-space:pre-wrap}
+    .m-cmt.admin-cmt .m-cmt-body{color:var(--steel)}
+    .m-thread-empty{background:var(--surface);padding:1.25rem;text-align:center;color:var(--muted);font-size:.78rem;border:1px solid var(--border)}
+    .m-reply-box{margin-top:.75rem}
+    .m-reply-input{width:100%;background:var(--bg);border:1px solid var(--border);padding:.75rem 1rem;font-size:.82rem;font-family:'Inter',sans-serif;color:var(--bone);resize:vertical;outline:none;min-height:72px;transition:border-color .2s;line-height:1.6}
+    .m-reply-input:focus{border-color:var(--ember)}
+    .m-reply-input::placeholder{color:var(--muted)}
+    .m-reply-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem;gap:.5rem}
+    .m-reply-hint{font-size:.72rem;color:var(--muted)}
+    .m-reply-send{background:var(--ember);border:1px solid var(--ember);padding:.5rem 1.1rem;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--bg);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+    .m-reply-send:hover{background:transparent;color:var(--ember)}
+    .m-reply-send:disabled{opacity:.5;cursor:not-allowed}
+
     /* TOAST */
     #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.82rem;color:var(--text);z-index:999;transform:translateY(4rem);opacity:0;transition:all .3s;max-width:300px;pointer-events:none}
     #toast.show{transform:none;opacity:1}
@@ -728,9 +755,20 @@ function openModal(id, type){
       <div class="m-notes">
         <label>Internal Notes</label>
         <textarea id="m-notes-val" placeholder="Add internal notes, actions taken…">${esc(r.notes||'')}</textarea>
+      </div>
+      <div class="m-thread-wrap">
+        <p class="m-thread-label">Customer Thread</p>
+        <div class="m-thread" id="m-thread"><div class="m-thread-empty">Loading…</div></div>
+        <div class="m-reply-box">
+          <textarea class="m-reply-input" id="m-reply-input" placeholder="Write a reply to the customer (visible on their tracking page)…"></textarea>
+          <div class="m-reply-foot">
+            <span class="m-reply-hint">Replies are visible to the customer at dorvin.in/track.html</span>
+            <button class="m-reply-send" id="m-reply-send">Send Reply →</button>
+          </div>
+        </div>
       </div>`;
     $('m-foot').innerHTML = `
-      <a class="m-btn email" href="mailto:${esc(r.email)}?subject=${esc(r.ticket_id||'')} — Update from Dorvin">✉ Reply</a>
+      <a class="m-btn email" href="mailto:${esc(r.email)}?subject=${esc(r.ticket_id||'')} — Update from Dorvin">✉ Email</a>
       <button class="m-btn del" id="m-del">Delete</button>
       <select class="m-status-sel" id="m-status-sel">
         <option value="open"        ${r.status==='open'?'selected':''}>Open</option>
@@ -768,10 +806,85 @@ function openModal(id, type){
     });
   };
 
+  /* ── THREAD (tickets only) ── */
+  if(type==='ticket'){
+    const threadEl   = $('m-thread');
+    const replyInput = $('m-reply-input');
+    const replySend  = $('m-reply-send');
+
+    function fmtShort(ts){ if(!ts) return '—'; const d=new Date(ts); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }
+    function initials(n){ return (n||'?').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase(); }
+
+    function buildAdminCmt(c){
+      const name = c.author_name || (c.is_admin?'Dorvin Support':'Customer');
+      const ini  = c.is_admin ? 'DS' : initials(name);
+      const roleTag = c.is_admin ? '<span class="m-cmt-role">· Dorvin Support</span>' : '';
+      return `<div class="m-cmt${c.is_admin?' admin-cmt':''}" id="mcmt-${esc(c.id)}">
+        <div class="m-cmt-head">
+          <span class="m-cmt-author">${esc(name)}</span>${roleTag}
+          <span class="m-cmt-time">${fmtShort(c.created_at)}</span>
+        </div>
+        <div class="m-cmt-body">${esc(c.message)}</div>
+      </div>`;
+    }
+
+    async function loadThread(ticketRef){
+      const { data, error } = await db.from('ticket_comments').select('*').eq('ticket_ref', ticketRef).order('created_at',{ascending:true});
+      if(error){ threadEl.innerHTML='<div class="m-thread-empty">Could not load thread.</div>'; return; }
+      if(!data || data.length===0){ threadEl.innerHTML='<div class="m-thread-empty">No customer messages yet.</div>'; return; }
+      threadEl.innerHTML = data.map(buildAdminCmt).join('');
+      threadEl.scrollTop = threadEl.scrollHeight;
+    }
+
+    loadThread(r.ticket_id);
+
+    // Realtime: new customer messages while modal is open
+    const threadCh = db.channel('admin-thread-'+r.ticket_id)
+      .on('postgres_changes',{event:'INSERT',schema:'public',table:'ticket_comments',filter:'ticket_ref=eq.'+r.ticket_id}, p=>{
+        if(!document.getElementById('mcmt-'+p.new.id)){
+          const empty = threadEl.querySelector('.m-thread-empty'); if(empty) empty.remove();
+          threadEl.insertAdjacentHTML('beforeend', buildAdminCmt(p.new));
+          threadEl.scrollTop = threadEl.scrollHeight;
+          toast('Customer added a message on '+r.ticket_id);
+        }
+      })
+      .subscribe();
+    // store so we can unsub on close
+    $('modal')._threadCh = threadCh;
+
+    // Admin reply
+    replySend.onclick = async ()=>{
+      const msg = replyInput.value.trim();
+      if(!msg){ toast('Type a reply first.', true); return; }
+      replySend.disabled=true; replySend.textContent='Sending…';
+      const user = await db.auth.getUser();
+      const { data: inserted, error } = await db.from('ticket_comments').insert({
+        ticket_ref:   r.ticket_id,
+        author_name:  'Dorvin Support',
+        author_email: 'support@dorvin.in',
+        message:      msg,
+        is_admin:     true
+      }).select().single();
+      replySend.disabled=false; replySend.textContent='Send Reply →';
+      if(error){ toast('Send failed: '+error.message, true); return; }
+      const empty = threadEl.querySelector('.m-thread-empty'); if(empty) empty.remove();
+      if(!document.getElementById('mcmt-'+inserted.id)){
+        threadEl.insertAdjacentHTML('beforeend', buildAdminCmt(inserted));
+        threadEl.scrollTop = threadEl.scrollHeight;
+      }
+      replyInput.value='';
+      toast('Reply sent — customer will see it on their tracking page.');
+    };
+  }
+
   $('modal').classList.add('open');
 }
 
-function closeModal(){ $('modal').classList.remove('open'); modalId=null; modalType=null; }
+function closeModal(){
+  // Unsubscribe thread channel if open
+  if($('modal')._threadCh){ $('modal')._threadCh.unsubscribe(); $('modal')._threadCh=null; }
+  $('modal').classList.remove('open'); modalId=null; modalType=null;
+}
 $('m-close').onclick = closeModal;
 $('modal').addEventListener('click', e=>{ if(e.target===$('modal')) closeModal(); });
 

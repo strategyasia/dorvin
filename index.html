@@ -1402,7 +1402,10 @@ document.getElementById('support-submit').addEventListener('click', async functi
   this.querySelector('span').textContent = 'Submit ticket'; this.disabled = false;
   if(error){ alert('Something went wrong. Please email support@dorvin.in directly.'); return; }
   ticketEl.textContent = 'Last ticket · ' + ticketId;
-  success.innerHTML = '<strong>Ticket ' + ticketId + ' created.</strong> Our team will reach out shortly.';
+  success.innerHTML = `
+    <strong>Ticket ${ticketId} created.</strong>
+    <span style="display:block;margin-top:.5rem;font-size:.85rem;color:var(--muted)">Our team will review it shortly. Track your ticket status and add additional details at any time.</span>
+    <a href="track.html?id=${ticketId}" style="display:inline-flex;align-items:center;gap:.5rem;margin-top:1.25rem;border:1px solid var(--ember);color:var(--ember);padding:.6rem 1.25rem;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;font-family:'Inter',sans-serif;transition:background .2s" onmouseover="this.style.background='hsla(28,70%,58%,.1)'" onmouseout="this.style.background='transparent'">Track Ticket ${ticketId} →</a>`;
   success.classList.add('show');
   inputs.forEach(el => { el.value=''; el.style.outline=''; });
 });

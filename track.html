@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track Your Ticket — Dorvin</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Track your Dorvin support ticket, view updates, and add additional details." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:hsl(240,6%,4%);--surface:hsl(240,5%,9%);--surface2:hsl(240,4%,12%);
+      --border:hsl(240,4%,15%);--ember:hsl(28,70%,58%);--text:hsl(30,8%,88%);
+      --muted:hsl(240,5%,55%);--bone:hsl(30,12%,92%);--steel:hsl(220,10%,82%);
+      --green:hsl(142,55%,42%);--red:hsl(0,62%,52%);--blue:hsl(210,70%,55%);
+    }
+    html{font-size:16px;scroll-behavior:smooth}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    .nav{position:sticky;top:0;z-index:50;background:hsla(240,6%,4%,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem}
+    .nav-logo{font-family:'Instrument Serif',serif;font-size:1.4rem;color:var(--bone);text-decoration:none;letter-spacing:-.01em}
+    .nav-right{display:flex;align-items:center;gap:1rem}
+    .nav-link{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+    .nav-link:hover{color:var(--bone)}
+    .nav-badge{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ember);border:1px solid hsla(28,70%,58%,.35);padding:.18em .55em}
+
+    /* HERO */
+    .hero{padding:5rem 2rem 3.5rem;text-align:center;border-bottom:1px solid var(--border)}
+    .hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:1.25rem}
+    .hero-title{font-family:'Instrument Serif',serif;font-size:clamp(2rem,5vw,3.25rem);color:var(--bone);line-height:.95;margin-bottom:1rem}
+    .hero-sub{font-size:.925rem;color:var(--muted);max-width:480px;margin:0 auto;line-height:1.7}
+
+    /* SEARCH BOX */
+    .search-wrap{max-width:620px;margin:3rem auto 0;padding:0 2rem}
+    .search-form{display:flex;gap:0;border:1px solid var(--border);background:var(--surface)}
+    .search-input{flex:1;background:transparent;border:none;padding:1rem 1.25rem;font-size:.95rem;font-family:'Inter',sans-serif;color:var(--bone);outline:none;min-width:0}
+    .search-input::placeholder{color:var(--muted)}
+    .search-btn{background:var(--bone);border:none;padding:1rem 1.75rem;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--bg);cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:background .2s}
+    .search-btn:hover{background:var(--ember)}
+    .search-btn:disabled{opacity:.5;cursor:not-allowed}
+    .search-hint{text-align:center;font-size:.75rem;color:var(--muted);margin-top:.75rem}
+
+    /* MAIN */
+    .main{max-width:820px;margin:0 auto;padding:3rem 2rem 6rem}
+
+    /* NOT FOUND */
+    .not-found{display:none;text-align:center;padding:4rem 2rem;border:1px solid var(--border);margin-top:2rem}
+    .not-found-icon{font-size:2.5rem;margin-bottom:1rem;opacity:.4}
+    .not-found h3{font-family:'Instrument Serif',serif;font-size:1.6rem;color:var(--bone);margin-bottom:.5rem}
+    .not-found p{font-size:.875rem;color:var(--muted);line-height:1.7}
+
+    /* TICKET CARD */
+    #ticket-section{display:none;margin-top:2.5rem}
+
+    .ticket-header{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1rem;padding:1.75rem 2rem;border:1px solid var(--border);background:var(--surface);border-bottom:none}
+    .ticket-id{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:500;color:var(--ember);letter-spacing:.06em}
+    .ticket-subject{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--bone);margin-top:.35rem;line-height:1.1}
+    .ticket-meta-row{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem;margin-top:.75rem}
+    .t-badge{font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;border:1px solid;padding:.15em .55em;white-space:nowrap}
+    .t-badge.status-open{color:var(--red);border-color:hsla(0,62%,52%,.4)}
+    .t-badge.status-in-progress{color:var(--ember);border-color:hsla(28,70%,58%,.4)}
+    .t-badge.status-resolved{color:var(--green);border-color:hsla(142,55%,42%,.4)}
+    .t-badge.status-closed{color:var(--muted);border-color:var(--border)}
+    .t-badge.cat{color:var(--steel);border-color:var(--border)}
+    .t-badge.pr-critical{color:var(--red);border-color:hsla(0,62%,52%,.4)}
+    .t-badge.pr-high{color:var(--ember);border-color:hsla(28,70%,58%,.4)}
+    .t-badge.pr-medium,.t-badge.pr-low{color:var(--muted);border-color:var(--border)}
+    .ticket-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-top:none}
+    @media(max-width:580px){.ticket-info-grid{grid-template-columns:1fr 1fr}}
+    .info-cell{background:var(--surface2);padding:.85rem 1rem}
+    .info-label{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+    .info-val{font-size:.82rem;color:var(--steel);font-family:'JetBrains Mono',monospace}
+
+    /* THREAD */
+    .thread-label{font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:2.5rem 0 1rem;display:flex;align-items:center;gap:.75rem}
+    .thread-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .thread{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border)}
+    .comment{background:var(--surface);padding:1.4rem 1.75rem}
+    .comment.admin-msg{background:var(--surface2)}
+    .comment-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem}
+    .comment-avatar{width:2rem;height:2rem;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:500;color:var(--muted);flex-shrink:0}
+    .comment.admin-msg .comment-avatar{background:hsla(28,70%,58%,.12);border-color:hsla(28,70%,58%,.3);color:var(--ember)}
+    .comment-author{font-size:.82rem;font-weight:600;color:var(--bone)}
+    .comment.admin-msg .comment-author{color:var(--ember)}
+    .comment-role{font-size:.7rem;color:var(--muted);margin-left:.1rem}
+    .comment-time{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);margin-left:auto;white-space:nowrap}
+    .comment-body{font-size:.875rem;color:var(--steel);line-height:1.75;white-space:pre-wrap}
+    .comment.original .comment-body{color:var(--muted)}
+    .thread-empty{background:var(--surface);padding:2.5rem;text-align:center;color:var(--muted);font-size:.85rem;border:1px solid var(--border)}
+
+    /* UPDATE FORM */
+    .update-section{margin-top:2.5rem;border:1px solid var(--border);background:var(--surface)}
+    .update-head{padding:1.25rem 1.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem}
+    .update-head-title{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--bone)}
+    .update-head-sub{font-size:.78rem;color:var(--muted)}
+    .update-body{padding:1.5rem 1.75rem;display:flex;flex-direction:column;gap:1rem}
+    .u-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:580px){.u-row{grid-template-columns:1fr}}
+    .u-field label{display:block;font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.45rem}
+    .u-field input,.u-field textarea{width:100%;background:var(--bg);border:1px solid var(--border);padding:.75rem 1rem;font-size:.875rem;font-family:'Inter',sans-serif;color:var(--bone);outline:none;transition:border-color .2s;resize:vertical}
+    .u-field input:focus,.u-field textarea:focus{border-color:var(--ember)}
+    .u-field input::placeholder,.u-field textarea::placeholder{color:var(--muted)}
+    .update-foot{padding:1rem 1.75rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .submit-btn{background:var(--bone);border:1px solid var(--bone);padding:.8rem 1.75rem;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--bg);cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:.5rem;transition:all .2s}
+    .submit-btn:hover{background:transparent;color:var(--bone)}
+    .submit-btn:disabled{opacity:.5;cursor:not-allowed}
+    .submit-note{font-size:.75rem;color:var(--muted)}
+
+    /* SUCCESS TOAST */
+    #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);border:1px solid var(--border);padding:.85rem 1.25rem;font-size:.82rem;color:var(--text);z-index:999;transform:translateY(4rem);opacity:0;transition:all .3s;max-width:300px;pointer-events:none}
+    #toast.show{transform:none;opacity:1}
+
+    /* LIVE INDICATOR */
+    .live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-live 2s ease-in-out infinite;flex-shrink:0}
+    @keyframes pulse-live{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1)}}
+
+    /* RESOLVED BANNER */
+    .resolved-banner{display:none;background:hsla(142,55%,42%,.08);border:1px solid hsla(142,55%,42%,.25);padding:1rem 1.75rem;margin-top:.75rem;font-size:.85rem;color:hsl(142,55%,60%);line-height:1.6}
+
+    @media(max-width:580px){
+      .hero{padding:3.5rem 1.25rem 2.5rem}
+      .search-wrap{padding:0 1.25rem}
+      .main{padding:2rem 1.25rem 5rem}
+      .ticket-header{padding:1.25rem}
+      .comment{padding:1rem 1.25rem}
+      .update-body{padding:1.25rem}
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="/" class="nav-logo">Dorvin</a>
+  <div class="nav-right">
+    <span class="nav-badge">Support Tracker</span>
+    <a href="/#support" class="nav-link">New Ticket</a>
+    <a href="/" class="nav-link">Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">— Ticket Tracker</p>
+  <h1 class="hero-title">Track your <span style="font-style:italic">support</span> ticket.</h1>
+  <p class="hero-sub">View real-time status updates and add additional details to your open ticket at any time.</p>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-form">
+    <input class="search-input" type="text" id="ticket-input" placeholder="Enter ticket ID — e.g. DRV-A1B2C3" autocomplete="off" spellcheck="false" />
+    <button class="search-btn" id="lookup-btn">Look up →</button>
+  </div>
+  <p class="search-hint">Your ticket ID was shown after you submitted your support request.</p>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- NOT FOUND -->
+  <div class="not-found" id="not-found">
+    <div class="not-found-icon">⊘</div>
+    <h3>Ticket not found</h3>
+    <p>We couldn't find a ticket matching that ID.<br>Double-check the ID and try again, or <a href="/#support" style="color:var(--ember)">submit a new ticket</a>.</p>
+  </div>
+
+  <!-- TICKET -->
+  <div id="ticket-section">
+
+    <!-- Header -->
+    <div class="ticket-header">
+      <div style="flex:1;min-width:0">
+        <p class="ticket-id" id="t-id">—</p>
+        <p class="ticket-subject" id="t-subject">—</p>
+        <div class="ticket-meta-row">
+          <span class="t-badge" id="t-status">—</span>
+          <span class="t-badge cat" id="t-category">—</span>
+          <span class="t-badge" id="t-priority">—</span>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <p style="font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace" id="t-date">—</p>
+        <div style="display:flex;align-items:center;gap:.4rem;margin-top:.5rem;justify-content:flex-end">
+          <span class="live-dot"></span>
+          <span style="font-size:.7rem;color:var(--muted)">Live updates on</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info grid -->
+    <div class="ticket-info-grid">
+      <div class="info-cell">
+        <p class="info-label">Company</p>
+        <p class="info-val" id="t-company">—</p>
+      </div>
+      <div class="info-cell">
+        <p class="info-label">Email</p>
+        <p class="info-val" id="t-email" style="font-size:.72rem;word-break:break-all">—</p>
+      </div>
+      <div class="info-cell">
+        <p class="info-label">Customer ID</p>
+        <p class="info-val" id="t-custid">—</p>
+      </div>
+    </div>
+
+    <!-- Resolved banner -->
+    <div class="resolved-banner" id="resolved-banner">
+      ✓ This ticket is marked <strong>resolved</strong>. If you still need help, add a message below and we'll reopen it.
+    </div>
+
+    <!-- Thread -->
+    <p class="thread-label">Conversation thread</p>
+    <div class="thread" id="thread"></div>
+
+    <!-- Update form -->
+    <div class="update-section" id="update-section">
+      <div class="update-head">
+        <div>
+          <p class="update-head-title">Add more details</p>
+          <p class="update-head-sub">Your message will be visible to the Dorvin team.</p>
+        </div>
+      </div>
+      <div class="update-body">
+        <div class="u-row">
+          <div class="u-field">
+            <label>Your Name *</label>
+            <input type="text" id="u-name" placeholder="Full name" />
+          </div>
+          <div class="u-field">
+            <label>Your Email *</label>
+            <input type="email" id="u-email" placeholder="email@company.com" />
+          </div>
+        </div>
+        <div class="u-field">
+          <label>Additional Details *</label>
+          <textarea id="u-message" rows="5" placeholder="Describe any updates, new symptoms, error messages, or context that might help us resolve your ticket faster…"></textarea>
+        </div>
+      </div>
+      <div class="update-foot">
+        <p class="submit-note">Reply to <span id="u-ticket-ref" style="font-family:'JetBrains Mono',monospace;color:var(--ember)">—</span></p>
+        <button class="submit-btn" id="u-submit">
+          <span id="u-btn-text">Send Update</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /ticket-section -->
+</div><!-- /main -->
+
+<script>
+  const SUPABASE_URL      = 'https://zxgypxrvsytxtefwtjjc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_ikKZBNSx1mehWoUzsGNnWg_Js0DoqNv';
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let currentTicket = null;
+  let commentChannel = null;
+
+  /* ── HELPERS ── */
+  function esc(s){ const d=document.createElement('div'); d.textContent=String(s||''); return d.innerHTML; }
+  function $(id){ return document.getElementById(id); }
+  function toast(msg, err=false){
+    const t=$('toast'); t.textContent=msg; t.className='show'+(err?' err':'');
+    clearTimeout(t._t); t._t=setTimeout(()=>{ t.className=''; },3200);
+  }
+  function fmt(ts){
+    if(!ts) return '—';
+    const d=new Date(ts);
+    return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})
+          +' · '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  }
+  function initials(name){ return (name||'?').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase(); }
+
+  function statusClass(s){
+    const map={open:'status-open','in-progress':'status-in-progress',resolved:'status-resolved',closed:'status-closed'};
+    return 't-badge '+(map[s]||'cat');
+  }
+  function priorityClass(p){
+    const map={critical:'pr-critical',high:'pr-high',medium:'pr-medium',low:'pr-low'};
+    return 't-badge '+(map[(p||'').toLowerCase()]||'cat');
+  }
+
+  /* ── RENDER TICKET ── */
+  function renderTicket(r){
+    $('t-id').textContent       = r.ticket_id || '—';
+    $('t-subject').textContent  = r.subject   || '—';
+    $('t-date').textContent     = fmt(r.created_at);
+    $('t-company').textContent  = r.company   || '—';
+    $('t-email').textContent    = r.email     || '—';
+    $('t-custid').textContent   = r.customer_id || '—';
+
+    const stEl = $('t-status');
+    stEl.className = statusClass(r.status);
+    stEl.textContent = r.status || '—';
+
+    const catEl = $('t-category');
+    catEl.textContent = r.category || '—';
+
+    const prEl = $('t-priority');
+    prEl.className = priorityClass(r.priority);
+    prEl.textContent = (r.priority||'—');
+
+    $('u-ticket-ref').textContent = r.ticket_id;
+
+    if(r.status === 'resolved' || r.status === 'closed'){
+      $('resolved-banner').style.display = 'block';
+    }
+
+    // Add original description as first thread entry (pinned)
+    const thread = $('thread');
+    if(r.description){
+      thread.innerHTML = buildComment({
+        id:'__orig__',
+        created_at: r.created_at,
+        author_name: (r.company ? r.company+' (original submission)' : 'Original submission'),
+        author_email: r.email,
+        message: r.description,
+        is_admin: false,
+        is_original: true
+      });
+    } else {
+      thread.innerHTML = '';
+    }
+
+    $('ticket-section').style.display = 'block';
+  }
+
+  /* ── BUILD COMMENT HTML ── */
+  function buildComment(c){
+    const isAdmin = c.is_admin;
+    const isOrig  = c.is_original;
+    const name    = c.author_name || (isAdmin ? 'Dorvin Support' : 'Customer');
+    const ini     = isAdmin ? 'DS' : initials(name);
+    const roleTag = isAdmin ? '<span class="comment-role">· Dorvin Support</span>' : (isOrig ? '<span class="comment-role">· Original submission</span>' : '');
+    return `<div class="comment${isAdmin?' admin-msg':''}${isOrig?' original':''}" id="cmt-${esc(c.id)}">
+      <div class="comment-head">
+        <div class="comment-avatar">${esc(ini)}</div>
+        <div>
+          <span class="comment-author">${esc(name)}</span>${roleTag}
+        </div>
+        <span class="comment-time">${fmt(c.created_at)}</span>
+      </div>
+      <div class="comment-body">${esc(c.message)}</div>
+    </div>`;
+  }
+
+  function appendComment(c){
+    const thread = $('thread');
+    // Remove empty state if present
+    const empty = thread.querySelector('.thread-empty');
+    if(empty) empty.remove();
+    const div = document.createElement('div');
+    div.innerHTML = buildComment(c);
+    thread.appendChild(div.firstElementChild);
+    // Scroll into view
+    div.firstElementChild && div.firstElementChild.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+
+  /* ── LOAD COMMENTS ── */
+  async function loadComments(ticketId){
+    const { data, error } = await db
+      .from('ticket_comments')
+      .select('*')
+      .eq('ticket_ref', ticketId)
+      .order('created_at', {ascending:true});
+
+    const thread = $('thread');
+    if(!error && data && data.length > 0){
+      data.forEach(c => appendComment(c));
+    }
+    // Subscribe to new comments
+    if(commentChannel) commentChannel.unsubscribe();
+    commentChannel = db.channel('track-'+ticketId)
+      .on('postgres_changes',{
+        event:'INSERT', schema:'public', table:'ticket_comments',
+        filter:'ticket_ref=eq.'+ticketId
+      }, payload => {
+        // Avoid duplicate if we already rendered it (from our own submit)
+        if(!document.getElementById('cmt-'+payload.new.id)){
+          appendComment(payload.new);
+        }
+      })
+      .subscribe();
+  }
+
+  /* ── LOAD TICKET ── */
+  async function loadTicket(id){
+    const cleanId = id.trim().toUpperCase();
+    $('lookup-btn').disabled = true;
+    $('lookup-btn').textContent = 'Looking up…';
+    $('not-found').style.display   = 'none';
+    $('ticket-section').style.display = 'none';
+    $('resolved-banner').style.display = 'none';
+
+    const { data, error } = await db
+      .from('support_tickets')
+      .select('*')
+      .eq('ticket_id', cleanId)
+      .maybeSingle();
+
+    $('lookup-btn').disabled = false;
+    $('lookup-btn').textContent = 'Look up →';
+
+    if(error){ toast('Something went wrong. Try again.', true); return; }
+    if(!data){ $('not-found').style.display = 'block'; return; }
+
+    currentTicket = data;
+    renderTicket(data);
+    await loadComments(data.ticket_id);
+  }
+
+  /* ── SEARCH ── */
+  $('lookup-btn').addEventListener('click', ()=>{
+    const val = $('ticket-input').value.trim();
+    if(!val){ toast('Enter a ticket ID first.', true); return; }
+    loadTicket(val);
+    history.replaceState(null,'','?id='+encodeURIComponent(val.toUpperCase()));
+  });
+  $('ticket-input').addEventListener('keydown', e=>{ if(e.key==='Enter') $('lookup-btn').click(); });
+
+  /* ── SUBMIT UPDATE ── */
+  $('u-submit').addEventListener('click', async ()=>{
+    if(!currentTicket){ return; }
+    const name    = $('u-name').value.trim();
+    const email   = $('u-email').value.trim();
+    const message = $('u-message').value.trim();
+    if(!name || !email || !message){
+      toast('Please fill in all fields.', true); return;
+    }
+    $('u-btn-text').textContent = 'Sending…';
+    $('u-submit').disabled = true;
+
+    const { data: inserted, error } = await db.from('ticket_comments').insert({
+      ticket_ref:   currentTicket.ticket_id,
+      author_name:  name,
+      author_email: email,
+      message:      message,
+      is_admin:     false
+    }).select().single();
+
+    $('u-btn-text').textContent = 'Send Update';
+    $('u-submit').disabled = false;
+
+    if(error){ toast('Failed to send. Please try again.', true); return; }
+
+    // Render immediately (realtime may also fire — we check for duplicates)
+    appendComment(inserted);
+    $('u-name').value = '';
+    $('u-email').value = '';
+    $('u-message').value = '';
+    toast('Update sent — our team has been notified.');
+  });
+
+  /* ── AUTO-LOAD FROM URL ── */
+  const urlId = new URLSearchParams(location.search).get('id');
+  if(urlId){
+    $('ticket-input').value = urlId.toUpperCase();
+    loadTicket(urlId);
+  }
+</script>
+</body>
+</html>
