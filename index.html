@@ -404,6 +404,70 @@
     .app-cta-link { display:inline-flex; align-items:center; gap:.5rem; margin-top:2rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bone); transition:color .2s; }
     .app-cta-card:hover .app-cta-link { color:var(--ember); }
 
+    /* ── ENNEA9 UPCOMING CARD ── */
+    .app-card.upcoming {
+      position:relative; overflow:hidden;
+      background:var(--bg) !important;
+    }
+    /* Top ember line */
+    .app-card.upcoming::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg, transparent 0%, hsl(28,70%,58%) 30%, hsl(28,70%,58%) 70%, transparent 100%);
+    }
+    /* Radial ember glow in corner */
+    .app-card.upcoming::after {
+      content:''; position:absolute; top:-60px; right:-60px;
+      width:320px; height:320px; border-radius:50%;
+      background:radial-gradient(ellipse at center, hsla(28,70%,58%,.09) 0%, transparent 70%);
+      pointer-events:none;
+    }
+    .upcoming-inner {
+      display:grid; grid-template-columns:1fr; gap:3rem; position:relative; z-index:1;
+    }
+    @media(min-width:900px){ .upcoming-inner{ grid-template-columns:1fr auto; align-items:center; gap:4rem; } }
+
+    /* 9-node visual */
+    .ennea-vis {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:0; flex-shrink:0; position:relative;
+    }
+    .ennea-grid {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+      padding:2rem;
+    }
+    .en-node {
+      width:10px; height:10px; border-radius:50%;
+      background:var(--ember); opacity:.18;
+      animation:en-pulse 2.8s ease-in-out infinite;
+    }
+    .en-node:nth-child(1){animation-delay:.0s}  .en-node:nth-child(2){animation-delay:.2s}
+    .en-node:nth-child(3){animation-delay:.4s}  .en-node:nth-child(4){animation-delay:.6s}
+    .en-node:nth-child(5){animation-delay:.8s;opacity:.9;background:var(--ember);box-shadow:0 0 10px hsl(28,70%,58%)}
+    .en-node:nth-child(6){animation-delay:1.0s} .en-node:nth-child(7){animation-delay:1.2s}
+    .en-node:nth-child(8){animation-delay:1.4s} .en-node:nth-child(9){animation-delay:1.6s}
+    @keyframes en-pulse {
+      0%,100%{ opacity:.18; transform:scale(1); }
+      50%{ opacity:.8; transform:scale(1.35); }
+    }
+    .ennea-numeral {
+      font-family:'Instrument Serif',serif; font-size:7rem; line-height:1;
+      color:transparent; -webkit-text-stroke:1px hsla(28,70%,58%,.25);
+      letter-spacing:-.04em; position:absolute; user-select:none; pointer-events:none;
+    }
+    @media(min-width:900px){ .ennea-numeral{ font-size:9rem; } }
+
+    .app-soon-pill {
+      display:inline-flex; align-items:center; gap:.4rem;
+      border:1px solid hsla(28,70%,58%,.35); padding:.2em .7em;
+      font-family:'JetBrains Mono',monospace; font-size:9px; font-weight:500;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--ember); margin-bottom:.2rem;
+    }
+    .soon-dot {
+      width:5px; height:5px; border-radius:50%; background:var(--ember);
+      animation:en-pulse 1.8s ease-in-out infinite;
+    }
+    .app-card.upcoming .app-name { margin-top:.75rem; }
+
     /* ── PROCESS ── */
     #process { background:var(--bg); padding:8rem 3rem; }
     @media(min-width:768px){ #process{ padding:10rem 3rem; } }
@@ -960,6 +1024,42 @@
           <a href="#contact" class="btn-app-secondary">Build similar</a>
         </div>
       </article>
+      <!-- App 6 — Ennea9 Upcoming (wide) -->
+      <article class="app-card wide upcoming">
+        <div class="upcoming-inner">
+          <div>
+            <div class="app-tag-row" style="margin-bottom:.75rem">
+              <span class="app-soon-pill"><span class="soon-dot"></span>Upcoming</span>
+              <span class="app-idx">/06</span>
+            </div>
+            <h3 class="app-name">Ennea9</h3>
+            <p class="app-domain" style="color:var(--ember);opacity:.7">future — ennea9.com</p>
+            <p class="app-body">A next-generation enterprise intelligence platform built on nine adaptive AI agents — each governing a core business vertical: operations, finance, supply chain, HR, compliance, risk, customer experience, marketing, and growth. One unified layer of organisational intelligence.</p>
+            <div class="app-stack" style="margin-top:1.75rem">
+              <span class="app-stack-tag" style="border-color:hsla(28,70%,58%,.3);color:var(--ember)">Multi-Agent AI</span>
+              <span class="app-stack-tag">LLM Orchestration</span>
+              <span class="app-stack-tag">RAG Pipeline</span>
+              <span class="app-stack-tag">Real-time Analytics</span>
+              <span class="app-stack-tag">Enterprise SaaS</span>
+              <span class="app-stack-tag">Python · TypeScript</span>
+            </div>
+            <div class="app-actions" style="padding-top:2rem">
+              <a href="#contact" class="btn-app-primary" style="background:var(--ember);border-color:var(--ember);color:var(--bg)">Register Interest ↗</a>
+              <a href="#contact" class="btn-app-secondary">Learn more</a>
+            </div>
+          </div>
+          <!-- 9-node visual -->
+          <div class="ennea-vis">
+            <span class="ennea-numeral">9</span>
+            <div class="ennea-grid">
+              <div class="en-node"></div><div class="en-node"></div><div class="en-node"></div>
+              <div class="en-node"></div><div class="en-node"></div><div class="en-node"></div>
+              <div class="en-node"></div><div class="en-node"></div><div class="en-node"></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
       <!-- CTA card -->
       <a href="#contact" class="app-cta-card">
         <span class="app-cta-label">✦ Your project here</span>
