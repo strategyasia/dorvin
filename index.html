@@ -1592,11 +1592,12 @@ document.getElementById('support-submit').addEventListener('click', async functi
 function sfSwitch(tab){
   document.getElementById('sf-tab-open').classList.toggle('active', tab==='open');
   document.getElementById('sf-tab-track').classList.toggle('active', tab==='track');
-  document.getElementById('sf-open-pane').style.display  = tab==='open'  ? '' : 'none';
-  document.getElementById('sf-track-pane').style.display = tab==='track' ? '' : 'none';
+  document.getElementById('sf-open-pane').style.display  = tab==='open'  ? 'block' : 'none';
+  document.getElementById('sf-track-pane').style.display = tab==='track' ? 'block' : 'none';
   if(tab==='track') document.getElementById('sf-track-input').focus();
 }
 // init
+document.getElementById('sf-open-pane').style.display  = 'block';
 document.getElementById('sf-track-pane').style.display = 'none';
 
 /* ── TRACK LOOKUP (inline) ── */
