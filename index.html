@@ -579,10 +579,44 @@
     .support-hotline-label { font-size:10px; font-weight:600; letter-spacing:0.24em; text-transform:uppercase; color:var(--muted); margin-bottom:.5rem; }
     .support-hotline-email { font-family:'Instrument Serif',serif; font-size:1.5rem; color:var(--bone); text-decoration:none; display:block; transition:color .2s; }
     .support-hotline-email:hover { color:var(--ember); }
-    .support-form { border:1px solid var(--border); background:var(--bg); padding:2rem; }
-    @media(min-width:768px){ .support-form{ padding:3rem; } }
+    .support-form { border:1px solid var(--border); background:var(--bg); }
+    .support-form-tabs { display:flex; border-bottom:1px solid var(--border); }
+    .sf-tab { flex:1; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-1px; padding:1rem 1.25rem; font-family:'Inter',sans-serif; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); cursor:pointer; transition:color .2s, border-color .2s; }
+    .sf-tab.active { color:var(--bone); border-bottom-color:var(--ember); }
+    .sf-tab:hover { color:var(--bone); }
+    .support-form-body { padding:2rem; }
+    @media(min-width:768px){ .support-form-body{ padding:2.5rem 3rem; } }
     .support-form-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:1.5rem; border-bottom:1px solid var(--border); margin-bottom:1.5rem; }
     .support-ticket-id { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ember); }
+
+    /* Track pane */
+    #sf-track-pane { display:none; }
+    .track-search-row { display:flex; gap:0; border:1px solid var(--border); margin-bottom:1.5rem; }
+    .track-search-input { flex:1; background:var(--surface); border:none; padding:.85rem 1rem; font-size:.9rem; font-family:'Inter',sans-serif; color:var(--bone); outline:none; min-width:0; }
+    .track-search-input::placeholder { color:var(--muted); }
+    .track-search-btn { background:var(--bone); border:none; padding:.85rem 1.25rem; font-size:10px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--bg); cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap; transition:background .2s; flex-shrink:0; }
+    .track-search-btn:hover { background:var(--ember); color:var(--bg); }
+    .track-search-btn:disabled { opacity:.5; cursor:not-allowed; }
+    .track-err { display:none; font-size:.78rem; color:hsl(0,62%,68%); margin-bottom:1rem; }
+    .track-err.show { display:block; }
+    /* Result card */
+    .track-result { display:none; border:1px solid var(--border); }
+    .track-result.show { display:block; }
+    .tr-head { padding:1.1rem 1.25rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+    .tr-id { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--ember); letter-spacing:.08em; }
+    .tr-badge { font-family:'JetBrains Mono',monospace; font-size:.6rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; border:1px solid; padding:.12em .5em; }
+    .tr-badge.open { color:hsl(0,62%,52%); border-color:hsla(0,62%,52%,.4); }
+    .tr-badge.in-progress { color:var(--ember); border-color:hsla(28,70%,58%,.4); }
+    .tr-badge.resolved { color:hsl(142,55%,42%); border-color:hsla(142,55%,42%,.4); }
+    .tr-badge.closed { color:var(--muted); border-color:var(--border); }
+    .tr-body { padding:1.1rem 1.25rem; }
+    .tr-subject { font-family:'Instrument Serif',serif; font-size:1.2rem; color:var(--bone); margin-bottom:.5rem; line-height:1.2; }
+    .tr-meta { font-size:.75rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:.75rem; }
+    .tr-meta span { display:flex; align-items:center; gap:.3rem; }
+    .tr-foot { padding:.85rem 1.25rem; border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; }
+    .tr-link { display:inline-flex; align-items:center; gap:.4rem; border:1px solid var(--ember); color:var(--ember); padding:.5rem 1rem; font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; text-decoration:none; font-family:'Inter',sans-serif; transition:background .2s; }
+    .tr-link:hover { background:hsla(28,70%,58%,.08); }
+    .tr-last-update { font-size:.72rem; color:var(--muted); font-family:'JetBrains Mono',monospace; }
 
     /* ── FOOTER ── */
     footer { border-top:1px solid var(--border); background:var(--bg); padding:3rem; }
@@ -1260,8 +1294,16 @@
       </div>
 
       <div class="support-form">
+        <!-- Tabs -->
+        <div class="support-form-tabs">
+          <button class="sf-tab active" id="sf-tab-open" onclick="sfSwitch('open')">Open a ticket</button>
+          <button class="sf-tab" id="sf-tab-track" onclick="sfSwitch('track')">Track a ticket</button>
+        </div>
+
+        <!-- Open ticket pane -->
+        <div class="support-form-body" id="sf-open-pane">
         <div class="support-form-header">
-          <span class="eyebrow">Open a ticket</span>
+          <span class="eyebrow">New support request</span>
           <span class="support-ticket-id" id="last-ticket-id"></span>
         </div>
         <div class="form-row-2">
@@ -1311,7 +1353,44 @@
           <span>Submit ticket</span><span class="arrow">→</span>
         </button>
         <div class="form-success" id="support-success"></div>
-      </div>
+        </div><!-- /sf-open-pane -->
+
+        <!-- Track ticket pane -->
+        <div class="support-form-body" id="sf-track-pane">
+          <div class="support-form-header" style="margin-bottom:1.25rem">
+            <span class="eyebrow">Track an existing ticket</span>
+          </div>
+          <p style="font-size:.875rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.65">Enter your ticket ID — sent to you when you first submitted your request.</p>
+          <div class="track-search-row">
+            <input class="track-search-input" type="text" id="sf-track-input" placeholder="e.g. DRV-A1B2C3" autocomplete="off" spellcheck="false" />
+            <button class="track-search-btn" id="sf-track-btn">Look up →</button>
+          </div>
+          <p class="track-err" id="sf-track-err">Please enter a valid ticket ID.</p>
+
+          <!-- Result -->
+          <div class="track-result" id="sf-track-result">
+            <div class="tr-head">
+              <span class="tr-id" id="sf-tr-id">—</span>
+              <span class="tr-badge" id="sf-tr-status">—</span>
+            </div>
+            <div class="tr-body">
+              <p class="tr-subject" id="sf-tr-subject">—</p>
+              <div class="tr-meta">
+                <span id="sf-tr-company">—</span>
+                <span>·</span>
+                <span id="sf-tr-cat">—</span>
+                <span>·</span>
+                <span id="sf-tr-date">—</span>
+              </div>
+            </div>
+            <div class="tr-foot">
+              <span class="tr-last-update" id="sf-tr-ago">—</span>
+              <a class="tr-link" id="sf-tr-fulllink" href="track.html" target="_blank">View full thread &amp; reply →</a>
+            </div>
+          </div>
+        </div><!-- /sf-track-pane -->
+
+      </div><!-- /support-form -->
     </div>
   </div>
 </section>
@@ -1509,6 +1588,65 @@ document.getElementById('support-submit').addEventListener('click', async functi
   success.classList.add('show');
   inputs.forEach(el => { el.value=''; el.style.outline=''; });
 });
+/* ── SUPPORT FORM TABS ── */
+function sfSwitch(tab){
+  document.getElementById('sf-tab-open').classList.toggle('active', tab==='open');
+  document.getElementById('sf-tab-track').classList.toggle('active', tab==='track');
+  document.getElementById('sf-open-pane').style.display  = tab==='open'  ? '' : 'none';
+  document.getElementById('sf-track-pane').style.display = tab==='track' ? '' : 'none';
+  if(tab==='track') document.getElementById('sf-track-input').focus();
+}
+// init
+document.getElementById('sf-track-pane').style.display = 'none';
+
+/* ── TRACK LOOKUP (inline) ── */
+(function(){
+  function fmtDate(ts){ if(!ts) return '—'; const d=new Date(ts); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+  function fmtAgo(ts){ const diff=Math.round((Date.now()-new Date(ts))/60000); if(diff<1) return 'just now'; if(diff<60) return diff+'m ago'; if(diff<1440) return Math.round(diff/60)+'h ago'; return Math.round(diff/1440)+'d ago'; }
+
+  document.getElementById('sf-track-btn').addEventListener('click', async function(){
+    const val = document.getElementById('sf-track-input').value.trim().toUpperCase();
+    const errEl = document.getElementById('sf-track-err');
+    const resultEl = document.getElementById('sf-track-result');
+    errEl.classList.remove('show');
+    resultEl.classList.remove('show');
+
+    if(!val){ errEl.classList.add('show'); document.getElementById('sf-track-input').focus(); return; }
+
+    this.disabled = true; this.textContent = 'Looking up…';
+
+    const { data, error } = await db.from('support_tickets').select('*').eq('ticket_id', val).maybeSingle();
+
+    this.disabled = false; this.textContent = 'Look up →';
+
+    if(error || !data){
+      errEl.textContent = data===null ? 'No ticket found with that ID. Check the ID and try again.' : 'Something went wrong — please try again.';
+      errEl.classList.add('show');
+      return;
+    }
+
+    // Populate result card
+    document.getElementById('sf-tr-id').textContent = data.ticket_id;
+    const stEl = document.getElementById('sf-tr-status');
+    stEl.textContent = data.status;
+    stEl.className = 'tr-badge '+(data.status||'').replace(/\s+/g,'-').toLowerCase();
+    document.getElementById('sf-tr-subject').textContent = data.subject || '—';
+    document.getElementById('sf-tr-company').textContent = data.company || '—';
+    document.getElementById('sf-tr-cat').textContent = data.category || '—';
+    document.getElementById('sf-tr-date').textContent = 'Opened '+fmtDate(data.created_at);
+    document.getElementById('sf-tr-ago').textContent = 'Last activity: '+fmtAgo(data.created_at);
+    document.getElementById('sf-tr-fulllink').href = 'track.html?id='+encodeURIComponent(data.ticket_id);
+    resultEl.classList.add('show');
+  });
+
+  document.getElementById('sf-track-input').addEventListener('keydown', function(e){
+    if(e.key==='Enter') document.getElementById('sf-track-btn').click();
+  });
+  document.getElementById('sf-track-input').addEventListener('input', function(){
+    document.getElementById('sf-track-err').classList.remove('show');
+    document.getElementById('sf-track-result').classList.remove('show');
+  });
+})();
 </script>
 </body>
 </html>
