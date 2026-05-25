@@ -404,6 +404,32 @@
     .app-cta-link { display:inline-flex; align-items:center; gap:.5rem; margin-top:2rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bone); transition:color .2s; }
     .app-cta-card:hover .app-cta-link { color:var(--ember); }
 
+    /* ── CLIENT LOGO CARD ── */
+    .app-card.logo-card { overflow:hidden; }
+    .logo-card-inner { display:grid; grid-template-columns:1fr; gap:2.5rem; position:relative; }
+    @media(min-width:900px){ .logo-card-inner{ grid-template-columns:1fr 280px; align-items:center; gap:3rem; } }
+    .logo-card-visual {
+      display:flex; align-items:center; justify-content:center;
+      background:var(--surface2); border:1px solid var(--border);
+      padding:2.5rem; flex-shrink:0; position:relative; overflow:hidden;
+      min-height:180px;
+    }
+    /* subtle radial glow behind logo */
+    .logo-card-visual::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse at center, hsla(30,12%,92%,.04) 0%, transparent 70%);
+    }
+    .logo-card-visual img {
+      max-width:180px; max-height:120px; object-fit:contain;
+      position:relative; z-index:1; filter:brightness(1.05);
+    }
+    .logo-card-conf {
+      display:inline-flex; align-items:center; gap:.4rem;
+      font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.14em;
+      text-transform:uppercase; color:var(--muted); margin-top:.4rem;
+    }
+    .logo-card-conf::before { content:''; display:block; width:16px; height:1px; background:var(--border); }
+
     /* ── ENNEA9 UPCOMING CARD ── */
     .app-card.upcoming {
       position:relative; overflow:hidden;
@@ -1094,18 +1120,34 @@
         </div>
       </article>
 
-      <!-- App 7 — 9 Points of View -->
-      <article class="app-card">
-        <div class="app-tag-row"><span class="app-tag">Enterprise · Live</span><span class="app-idx">/07</span></div>
-        <h3 class="app-name">9 Points of View</h3>
-        <p class="app-domain">157.245.198.161/master</p>
-        <p class="app-body">An enterprise Enneagram intelligence platform — maps individual and organisational behaviour across nine cognitive perspectives to accelerate leadership development, team alignment, and talent insight. Dark-themed, role-based dashboard with assessment flows and reporting.</p>
-        <div class="app-stack">
-          <span class="app-stack-tag">Angular</span><span class="app-stack-tag">Nebular UI</span><span class="app-stack-tag">TypeScript</span><span class="app-stack-tag">Node.js</span><span class="app-stack-tag">PostgreSQL</span>
+      <!-- App 7 — 9 Points of View (wide logo card) -->
+      <article class="app-card wide logo-card">
+        <div class="app-tag-row" style="margin-bottom:1.75rem">
+          <span class="app-tag">Enterprise · Live</span>
+          <span class="app-idx">/07</span>
         </div>
-        <div class="app-actions">
-          <a href="http://157.245.198.161/master/login" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
-          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        <div class="logo-card-inner">
+          <!-- Content -->
+          <div>
+            <h3 class="app-name" style="margin-top:0">9 Points of View</h3>
+            <p class="logo-card-conf">Client — Confidential</p>
+            <p class="app-body">An enterprise Enneagram intelligence platform — maps individual and organisational behaviour across nine cognitive perspectives to accelerate leadership development, team alignment, and talent insight. Role-based dashboard with assessment flows, coaching modules, and deep behavioural reporting.</p>
+            <div class="app-stack" style="margin-top:1.75rem">
+              <span class="app-stack-tag">Angular</span>
+              <span class="app-stack-tag">Nebular UI</span>
+              <span class="app-stack-tag">TypeScript</span>
+              <span class="app-stack-tag">Node.js</span>
+              <span class="app-stack-tag">PostgreSQL</span>
+            </div>
+            <div class="app-actions" style="padding-top:2rem">
+              <a href="http://157.245.198.161/master/login" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
+              <a href="#contact" class="btn-app-secondary">Build similar</a>
+            </div>
+          </div>
+          <!-- Logo visual -->
+          <div class="logo-card-visual">
+            <img src="assets/clients/9pov/logo.png" alt="9 Points of View" />
+          </div>
         </div>
       </article>
 
