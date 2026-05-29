@@ -376,32 +376,47 @@
     .showcase-head { display:grid; grid-template-columns:1fr; gap:2rem; margin-bottom:5rem; }
     @media(min-width:1024px){ .showcase-head{ grid-template-columns:7fr 4fr; align-items:end; } }
     .showcase-head-right { font-size:1.125rem; color:var(--muted); }
+    /* ── COMPACT SHOWCASE GRID ── */
     .apps-grid { grid-template-columns:1fr; }
-    @media(min-width:768px){ .apps-grid{ grid-template-columns:repeat(2,1fr); } }
-    .app-card { display:flex; flex-direction:column; padding:2.5rem; transition:background .2s; }
-    @media(min-width:768px){ .app-card{ padding:3rem; } }
-    .app-card:hover { background:var(--bg) !important; }
-    .app-card.wide { grid-column:1/-1; }
-    .app-tag-row { display:flex; align-items:center; justify-content:space-between; }
-    .app-tag { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ember); }
-    .app-idx { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); }
-    .app-name { font-family:'Instrument Serif',serif; font-size:clamp(2rem,3.5vw,3rem); color:var(--bone); margin-top:1.5rem; }
-    .app-domain { font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--muted); margin-top:.5rem; }
-    .app-body { font-size:1rem; line-height:1.7; color:var(--steel); margin-top:1.5rem; max-width:40rem; }
-    .app-stack { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:2rem; }
-    .app-stack-tag { border:1px solid var(--border); padding:.25rem .75rem; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
-    .app-actions { margin-top:auto; padding-top:2.5rem; display:flex; flex-wrap:wrap; gap:.75rem; }
-    .btn-app-primary { display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--bone); background:var(--bone); padding:.75rem 1.25rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bg); text-decoration:none; transition:background .2s,color .2s; }
+    @media(min-width:600px){ .apps-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:960px){ .apps-grid{ grid-template-columns:repeat(3,1fr); } }
+
+    .app-card { display:flex; flex-direction:column; padding:1.5rem; transition:background .2s; }
+    .app-card:hover { background:var(--surface) !important; }
+
+    /* top row: logo thumb + meta */
+    .app-card-top { display:flex; align-items:flex-start; gap:.875rem; margin-bottom:1rem; }
+    .app-logo-thumb {
+      width:44px; height:44px; flex-shrink:0;
+      background:var(--surface2); border:1px solid var(--border);
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
+    }
+    .app-logo-thumb img { width:100%; height:100%; object-fit:contain; }
+    .app-logo-thumb.circle img { border-radius:50%; }
+    .app-logo-thumb.no-bg { background:transparent; border-color:transparent; }
+    .app-logo-mono { font-family:'JetBrains Mono',monospace; font-size:.6rem; font-weight:500; color:var(--ember); letter-spacing:.06em; }
+    .app-card-meta { flex:1; min-width:0; }
+    .app-tag-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:.3rem; }
+    .app-tag { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ember); }
+    .app-idx { font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); }
+    .app-name { font-family:'Instrument Serif',serif; font-size:1.2rem; color:var(--bone); line-height:1.15; }
+    .app-domain { font-family:'JetBrains Mono',monospace; font-size:.65rem; color:var(--muted); margin-top:.2rem; }
+    .app-body { font-size:.8rem; line-height:1.65; color:var(--muted); margin-top:.6rem; flex:1; }
+    .app-stack { display:flex; flex-wrap:wrap; gap:.35rem; margin-top:.875rem; }
+    .app-stack-tag { border:1px solid var(--border); padding:.15rem .55rem; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+    .app-actions { margin-top:auto; padding-top:1rem; display:flex; flex-wrap:wrap; gap:.5rem; }
+    .btn-app-primary { display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--bone); background:var(--bone); padding:.5rem 1rem; font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--bg); text-decoration:none; transition:background .2s,color .2s; }
     .btn-app-primary:hover { background:transparent; color:var(--bone); }
-    .btn-app-secondary { display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--border); padding:.75rem 1.25rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bone); text-decoration:none; transition:border-color .2s; }
-    .btn-app-secondary:hover { border-color:var(--bone); }
-    .app-cta-card { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:2.5rem; cursor:pointer; transition:background .2s; text-decoration:none; }
-    @media(min-width:768px){ .app-cta-card{ padding:3rem; } }
-    .app-cta-card:hover { background:var(--bg) !important; }
-    .app-cta-label { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ember); }
-    .app-cta-h3 { font-family:'Instrument Serif',serif; font-size:clamp(2rem,3.5vw,3rem); color:var(--bone); line-height:1.1; margin-top:1.5rem; }
+    .btn-app-secondary { display:inline-flex; align-items:center; gap:.35rem; border:1px solid var(--border); padding:.5rem 1rem; font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:border-color .2s,color .2s; }
+    .btn-app-secondary:hover { border-color:var(--bone); color:var(--bone); }
+
+    /* CTA tile */
+    .app-cta-card { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; padding:1.5rem; cursor:pointer; transition:background .2s; text-decoration:none; min-height:180px; }
+    .app-cta-card:hover { background:var(--surface) !important; }
+    .app-cta-label { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ember); }
+    .app-cta-h3 { font-family:'Instrument Serif',serif; font-size:1.5rem; color:var(--bone); line-height:1.1; margin-top:.75rem; }
     .app-cta-h3 em { font-style:italic; }
-    .app-cta-link { display:inline-flex; align-items:center; gap:.5rem; margin-top:2rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bone); transition:color .2s; }
+    .app-cta-link { display:inline-flex; align-items:center; gap:.4rem; margin-top:1.25rem; font-size:9px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--bone); transition:color .2s; }
     .app-cta-card:hover .app-cta-link { color:var(--ember); }
 
     /* ── CLIENT LOGO CARD ── */
@@ -1014,33 +1029,32 @@
     </div>
 
     <div class="cell-grid apps-grid">
-      <!-- App 1 — Ennea9 Upcoming (wide) -->
-      <article class="app-card wide upcoming">
-        <div class="upcoming-inner">
-          <div>
+
+      <!-- /01 Ennea9 — full-width upcoming banner -->
+      <article class="app-card upcoming" style="grid-column:1/-1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:2rem;position:relative;z-index:1;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
             <div class="app-tag-row" style="margin-bottom:.75rem">
               <span class="app-soon-pill"><span class="soon-dot"></span>Upcoming</span>
               <span class="app-idx">/01</span>
             </div>
-            <h3 class="app-name">Ennea9</h3>
-            <p class="app-domain" style="color:var(--ember);opacity:.7">future — ennea9.com</p>
-            <p class="app-body">A next-generation enterprise intelligence platform built on nine adaptive AI agents — each governing a core business vertical: operations, finance, supply chain, HR, compliance, risk, customer experience, marketing, and growth. One unified layer of organisational intelligence.</p>
-            <div class="app-stack" style="margin-top:1.75rem">
-              <span class="app-stack-tag" style="border-color:hsla(28,70%,58%,.3);color:var(--ember)">Multi-Agent AI</span>
+            <h3 class="app-name" style="font-size:1.75rem">Ennea9</h3>
+            <p style="font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--ember);opacity:.75;margin-top:.3rem;letter-spacing:.06em">future — ennea9.com</p>
+            <p class="app-body" style="max-width:42rem;margin-top:.75rem">A next-generation enterprise intelligence platform built on nine adaptive AI agents — each governing a core business vertical. One unified layer of organisational intelligence for the modern enterprise.</p>
+            <div class="app-stack" style="margin-top:1rem">
+              <span class="app-stack-tag" style="border-color:hsla(28,70%,58%,.35);color:var(--ember)">Multi-Agent AI</span>
               <span class="app-stack-tag">LLM Orchestration</span>
               <span class="app-stack-tag">RAG Pipeline</span>
-              <span class="app-stack-tag">Real-time Analytics</span>
               <span class="app-stack-tag">Enterprise SaaS</span>
               <span class="app-stack-tag">Python · TypeScript</span>
             </div>
-            <div class="app-actions" style="padding-top:2rem">
+            <div class="app-actions" style="padding-top:1.25rem">
               <a href="#contact" class="btn-app-primary" style="background:var(--ember);border-color:var(--ember);color:var(--bg)">Register Interest ↗</a>
               <a href="#contact" class="btn-app-secondary">Learn more</a>
             </div>
           </div>
-          <!-- 9-node visual -->
-          <div class="ennea-vis">
-            <span class="ennea-numeral">9</span>
+          <div class="ennea-vis" style="flex-shrink:0">
+            <span class="ennea-numeral" style="font-size:5.5rem">9</span>
             <div class="ennea-grid">
               <div class="en-node"></div><div class="en-node"></div><div class="en-node"></div>
               <div class="en-node"></div><div class="en-node"></div><div class="en-node"></div>
@@ -1050,161 +1064,161 @@
         </div>
       </article>
 
-      <!-- App 2 — 9 Points of View (wide logo card) -->
-      <article class="app-card wide logo-card">
-        <div class="app-tag-row" style="margin-bottom:1.75rem">
-          <span class="app-tag">Enterprise · Live</span>
-          <span class="app-idx">/02</span>
-        </div>
-        <div class="logo-card-inner">
-          <!-- Content -->
-          <div>
-            <h3 class="app-name" style="margin-top:0">9 Points of View</h3>
-            <p class="logo-card-conf">Client — Confidential</p>
-            <p class="app-body">An enterprise Enneagram intelligence platform — maps individual and organisational behaviour across nine cognitive perspectives to accelerate leadership development, team alignment, and talent insight. Role-based dashboard with assessment flows, coaching modules, and deep behavioural reporting.</p>
-            <div class="app-stack" style="margin-top:1.75rem">
-              <span class="app-stack-tag">Angular</span>
-              <span class="app-stack-tag">Nebular UI</span>
-              <span class="app-stack-tag">TypeScript</span>
-              <span class="app-stack-tag">Node.js</span>
-              <span class="app-stack-tag">PostgreSQL</span>
-            </div>
-            <div class="app-actions" style="padding-top:2rem">
-              <a href="http://157.245.198.161/master/login" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
-              <a href="#contact" class="btn-app-secondary">Build similar</a>
-            </div>
-          </div>
-          <!-- Logo visual -->
-          <div class="logo-card-visual">
+      <!-- /02 9 Points of View -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
             <img src="assets/clients/9pov/logo.png" alt="9 Points of View" />
           </div>
-        </div>
-      </article>
-
-      <!-- App 3 — The Ancestor's Essence (wide logo card) -->
-      <article class="app-card wide logo-card">
-        <div class="app-tag-row" style="margin-bottom:1.75rem">
-          <span class="app-tag">HealthTech · Private</span>
-          <span class="app-idx">/03</span>
-        </div>
-        <div class="logo-card-inner">
-          <div>
-            <h3 class="app-name" style="margin-top:0">The Ancestor's Essence</h3>
-            <p class="logo-card-conf">Client — Confidential</p>
-            <p class="app-body">End-to-end Ayurvedic supplement manufacturing management system — covers raw material procurement, formulation tracking, batch production workflows, quality control, compliance documentation, and inventory across the full supply chain.</p>
-            <div class="app-stack" style="margin-top:1.75rem">
-              <span class="app-stack-tag">Next.js</span>
-              <span class="app-stack-tag">React</span>
-              <span class="app-stack-tag">TypeScript</span>
-              <span class="app-stack-tag">Node.js</span>
-              <span class="app-stack-tag">PostgreSQL</span>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">Enterprise · Live</span>
+              <span class="app-idx">/02</span>
             </div>
-            <div class="app-actions" style="padding-top:2rem">
-              <a href="#contact" class="btn-app-primary">Enquire ↗</a>
-              <a href="#contact" class="btn-app-secondary">Build similar</a>
-            </div>
-          </div>
-          <div class="logo-card-visual" style="background:transparent">
-            <img src="assets/clients/ancestors-essence/logo.png" alt="The Ancestor's Essence" style="max-height:140px;max-width:140px;" />
+            <h3 class="app-name">9 Points of View</h3>
+            <p class="app-domain">Client — Confidential</p>
           </div>
         </div>
-      </article>
-
-      <!-- App 4 — El Taco Express (wide logo card) -->
-      <article class="app-card wide logo-card">
-        <div class="app-tag-row" style="margin-bottom:1.75rem">
-          <span class="app-tag">Restaurant · Live</span>
-          <span class="app-idx">/04</span>
-        </div>
-        <div class="logo-card-inner">
-          <div>
-            <h3 class="app-name" style="margin-top:0">El Taco Express</h3>
-            <p class="app-domain" style="margin-top:.4rem">
-              <a href="https://eltaco.express" target="_blank" rel="noopener noreferrer" style="color:var(--ember);font-family:'JetBrains Mono',monospace;font-size:.75rem;text-decoration:none">eltaco.express ↗</a>
-            </p>
-            <p class="app-body">Full-featured restaurant website for a Mexican express dining brand — online menu, event listings, Google reviews integration, contact &amp; reservation forms, and a responsive dining experience optimised for mobile-first customers.</p>
-            <div class="app-stack" style="margin-top:1.75rem">
-              <span class="app-stack-tag">WordPress</span>
-              <span class="app-stack-tag">Divi</span>
-              <span class="app-stack-tag">WooCommerce</span>
-              <span class="app-stack-tag">Contact Form 7</span>
-              <span class="app-stack-tag">Google Reviews</span>
-            </div>
-            <div class="app-actions" style="padding-top:2rem">
-              <a href="https://eltaco.express/" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit site ↗</a>
-              <a href="#contact" class="btn-app-secondary">Build similar</a>
-            </div>
-          </div>
-          <div class="logo-card-visual" style="background:transparent">
-            <img src="assets/clients/eltaco/logo.png" alt="El Taco Express" style="max-height:100px;max-width:220px;object-fit:contain" />
-          </div>
-        </div>
-      </article>
-
-      <!-- App 5 — TamilPetti (wide) -->
-      <article class="app-card wide">
-        <div class="app-tag-row"><span class="app-tag">Consumer · Live</span><span class="app-idx">/05</span></div>
-        <h3 class="app-name">TamilPetti</h3>
-        <p class="app-domain">tamilpetti.com</p>
-        <p class="app-body">A free, privacy-first utility platform for the global Tamil community — PDF tools, image editor, Tamil typing, Unicode conversion, QR generation and 30+ more tools. Everything runs in-browser.</p>
+        <p class="app-body">Enterprise Enneagram intelligence platform — maps individual and organisational behaviour across nine cognitive perspectives for leadership development, team alignment, and talent insight.</p>
         <div class="app-stack">
-          <span class="app-stack-tag">Vanilla JS</span><span class="app-stack-tag">PWA</span><span class="app-stack-tag">Client-side</span><span class="app-stack-tag">IndexedDB</span>
+          <span class="app-stack-tag">Angular</span>
+          <span class="app-stack-tag">Node.js</span>
+          <span class="app-stack-tag">PostgreSQL</span>
+        </div>
+        <div class="app-actions">
+          <a href="http://157.245.198.161/master/login" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
+          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        </div>
+      </article>
+
+      <!-- /03 The Ancestor's Essence -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb no-bg">
+            <img src="assets/clients/ancestors-essence/logo.png" alt="The Ancestor's Essence" />
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">HealthTech · Private</span>
+              <span class="app-idx">/03</span>
+            </div>
+            <h3 class="app-name">The Ancestor's Essence</h3>
+            <p class="app-domain">Client — Confidential</p>
+          </div>
+        </div>
+        <p class="app-body">End-to-end Ayurvedic supplement manufacturing system — raw material procurement, formulation tracking, batch production, quality control, and compliance documentation.</p>
+        <div class="app-stack">
+          <span class="app-stack-tag">Next.js</span>
+          <span class="app-stack-tag">TypeScript</span>
+          <span class="app-stack-tag">PostgreSQL</span>
+        </div>
+        <div class="app-actions">
+          <a href="#contact" class="btn-app-primary">Enquire ↗</a>
+          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        </div>
+      </article>
+
+      <!-- /04 El Taco Express -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb no-bg">
+            <img src="assets/clients/eltaco/logo.png" alt="El Taco Express" />
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">Restaurant · Live</span>
+              <span class="app-idx">/04</span>
+            </div>
+            <h3 class="app-name">El Taco Express</h3>
+            <p class="app-domain"><a href="https://eltaco.express" target="_blank" rel="noopener noreferrer" style="color:var(--ember);text-decoration:none">eltaco.express ↗</a></p>
+          </div>
+        </div>
+        <p class="app-body">Full-featured restaurant website for a Mexican express dining brand — online menu, event listings, Google reviews integration, and a mobile-first responsive dining experience.</p>
+        <div class="app-stack">
+          <span class="app-stack-tag">WordPress</span>
+          <span class="app-stack-tag">Divi</span>
+          <span class="app-stack-tag">WooCommerce</span>
+        </div>
+        <div class="app-actions">
+          <a href="https://eltaco.express/" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit site ↗</a>
+          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        </div>
+      </article>
+
+      <!-- /05 TamilPetti -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
+            <span class="app-logo-mono">TP</span>
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">Consumer · Live</span>
+              <span class="app-idx">/05</span>
+            </div>
+            <h3 class="app-name">TamilPetti</h3>
+            <p class="app-domain">tamilpetti.com</p>
+          </div>
+        </div>
+        <p class="app-body">Free, privacy-first utility platform for the global Tamil community — PDF tools, image editor, Tamil typing, Unicode conversion, QR generation, and 30+ in-browser tools.</p>
+        <div class="app-stack">
+          <span class="app-stack-tag">Vanilla JS</span>
+          <span class="app-stack-tag">PWA</span>
+          <span class="app-stack-tag">IndexedDB</span>
         </div>
         <div class="app-actions">
           <a href="https://tamilpetti.com/" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
           <a href="#contact" class="btn-app-secondary">Build similar</a>
         </div>
       </article>
-      <!-- App 4 -->
+
+      <!-- /06 Four Winds International -->
       <article class="app-card">
-        <div class="app-tag-row"><span class="app-tag">Corporate · Client</span><span class="app-idx">/06</span></div>
-        <h3 class="app-name">Four Winds International</h3>
-        <p class="app-domain">fourwindsintlgroup.com</p>
-        <p class="app-body">Corporate web platform for a global relocation &amp; logistics group — multilingual service pages, quote request flows, project cargo portfolio, integrated contact serving 50+ countries.</p>
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
+            <span class="app-logo-mono">FW</span>
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">Corporate · Client</span>
+              <span class="app-idx">/06</span>
+            </div>
+            <h3 class="app-name">Four Winds International</h3>
+            <p class="app-domain">fourwindsintlgroup.com</p>
+          </div>
+        </div>
+        <p class="app-body">Corporate web platform for a global relocation &amp; logistics group — multilingual service pages, quote request flows, project cargo portfolio serving 50+ countries.</p>
         <div class="app-stack">
-          <span class="app-stack-tag">HTML5</span><span class="app-stack-tag">CSS3</span><span class="app-stack-tag">JavaScript</span><span class="app-stack-tag">FormSubmit</span>
+          <span class="app-stack-tag">HTML5</span>
+          <span class="app-stack-tag">CSS3</span>
+          <span class="app-stack-tag">JavaScript</span>
         </div>
         <div class="app-actions">
           <a href="https://fourwindsintlgroup.com/" target="_blank" rel="noopener noreferrer" class="btn-app-primary">Visit app ↗</a>
           <a href="#contact" class="btn-app-secondary">Build similar</a>
         </div>
       </article>
-      <!-- App 5 -->
+
+      <!-- /07 RetailEdge Platform -->
       <article class="app-card">
-        <div class="app-tag-row"><span class="app-tag">E-Commerce · Client</span><span class="app-idx">/07</span></div>
-        <h3 class="app-name">RetailEdge Platform</h3>
-        <p class="app-domain">Client — Confidential</p>
-        <p class="app-body">Multi-vendor e-commerce platform with real-time inventory management, dynamic pricing engine, integrated payment gateway, and analytics tracking 50,000+ SKUs across 3 warehouses.</p>
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
+            <span class="app-logo-mono">RE</span>
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">E-Commerce · Client</span>
+              <span class="app-idx">/07</span>
+            </div>
+            <h3 class="app-name">RetailEdge Platform</h3>
+            <p class="app-domain">Client — Confidential</p>
+          </div>
+        </div>
+        <p class="app-body">Multi-vendor e-commerce platform with real-time inventory, dynamic pricing engine, integrated payments, and analytics tracking 50,000+ SKUs across 3 warehouses.</p>
         <div class="app-stack">
-          <span class="app-stack-tag">Next.js</span><span class="app-stack-tag">Node.js</span><span class="app-stack-tag">PostgreSQL</span><span class="app-stack-tag">Stripe</span><span class="app-stack-tag">AWS</span>
-        </div>
-        <div class="app-actions">
-          <a href="#contact" class="btn-app-primary">Enquire ↗</a>
-          <a href="#contact" class="btn-app-secondary">Build similar</a>
-        </div>
-      </article>
-      <!-- App 6 -->
-      <article class="app-card">
-        <div class="app-tag-row"><span class="app-tag">HealthTech · Client</span><span class="app-idx">/08</span></div>
-        <h3 class="app-name">MediPortal 360</h3>
-        <p class="app-domain">Client — Healthcare</p>
-        <p class="app-body">Patient management portal with appointment scheduling, EHR integration, telemedicine video consultations, and AI-assisted diagnostic reporting for a multi-speciality hospital group.</p>
-        <div class="app-stack">
-          <span class="app-stack-tag">React</span><span class="app-stack-tag">Java Spring</span><span class="app-stack-tag">HL7 FHIR</span><span class="app-stack-tag">WebRTC</span><span class="app-stack-tag">HIPAA</span>
-        </div>
-        <div class="app-actions">
-          <a href="#contact" class="btn-app-primary">Enquire ↗</a>
-          <a href="#contact" class="btn-app-secondary">Build similar</a>
-        </div>
-      </article>
-      <!-- App 7 -->
-      <article class="app-card">
-        <div class="app-tag-row"><span class="app-tag">FinTech · Client</span><span class="app-idx">/09</span></div>
-        <h3 class="app-name">FinAudit Pro</h3>
-        <p class="app-domain">Client — Financial Services</p>
-        <p class="app-body">Automated financial compliance and audit management SaaS — reconciliation engine, audit trail, regulatory reporting (MAS, RBI), and anomaly detection using ML for a regional banking client.</p>
-        <div class="app-stack">
-          <span class="app-stack-tag">Angular</span><span class="app-stack-tag">Python</span><span class="app-stack-tag">PostgreSQL</span><span class="app-stack-tag">Scikit-learn</span><span class="app-stack-tag">AES-256</span>
+          <span class="app-stack-tag">Next.js</span>
+          <span class="app-stack-tag">PostgreSQL</span>
+          <span class="app-stack-tag">AWS</span>
         </div>
         <div class="app-actions">
           <a href="#contact" class="btn-app-primary">Enquire ↗</a>
@@ -1212,12 +1226,67 @@
         </div>
       </article>
 
-      <!-- CTA card -->
+      <!-- /08 MediPortal 360 -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
+            <span class="app-logo-mono">MP</span>
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">HealthTech · Client</span>
+              <span class="app-idx">/08</span>
+            </div>
+            <h3 class="app-name">MediPortal 360</h3>
+            <p class="app-domain">Client — Healthcare</p>
+          </div>
+        </div>
+        <p class="app-body">Patient management portal with appointment scheduling, EHR integration, telemedicine video, and AI-assisted diagnostic reporting for a multi-speciality hospital group.</p>
+        <div class="app-stack">
+          <span class="app-stack-tag">React</span>
+          <span class="app-stack-tag">HL7 FHIR</span>
+          <span class="app-stack-tag">WebRTC</span>
+        </div>
+        <div class="app-actions">
+          <a href="#contact" class="btn-app-primary">Enquire ↗</a>
+          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        </div>
+      </article>
+
+      <!-- /09 FinAudit Pro -->
+      <article class="app-card">
+        <div class="app-card-top">
+          <div class="app-logo-thumb">
+            <span class="app-logo-mono">FA</span>
+          </div>
+          <div class="app-card-meta">
+            <div class="app-tag-row">
+              <span class="app-tag">FinTech · Client</span>
+              <span class="app-idx">/09</span>
+            </div>
+            <h3 class="app-name">FinAudit Pro</h3>
+            <p class="app-domain">Client — Financial Services</p>
+          </div>
+        </div>
+        <p class="app-body">Automated financial compliance and audit management SaaS — reconciliation engine, regulatory reporting (MAS, RBI), and ML-powered anomaly detection for a regional banking client.</p>
+        <div class="app-stack">
+          <span class="app-stack-tag">Angular</span>
+          <span class="app-stack-tag">Python</span>
+          <span class="app-stack-tag">Scikit-learn</span>
+        </div>
+        <div class="app-actions">
+          <a href="#contact" class="btn-app-primary">Enquire ↗</a>
+          <a href="#contact" class="btn-app-secondary">Build similar</a>
+        </div>
+      </article>
+
+      <!-- CTA tile -->
       <a href="#contact" class="app-cta-card">
         <span class="app-cta-label">✦ Your project here</span>
         <h3 class="app-cta-h3">Have an <em>idea</em>?<br>We'll turn it into a live, production-grade product.</h3>
         <span class="app-cta-link">Start a conversation ↗</span>
       </a>
+
     </div>
   </div>
 </section>
