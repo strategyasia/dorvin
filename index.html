@@ -509,6 +509,34 @@
     }
     .app-card.upcoming .app-name { margin-top:.75rem; }
 
+    /* ── SHOWCASE PAGINATION ── */
+    .showcase-pagination {
+      display:flex; align-items:center; justify-content:center;
+      gap:1.25rem; margin-top:2rem; padding-top:2rem;
+      border-top:1px solid var(--border);
+    }
+    .pager-btn {
+      background:none; border:1px solid var(--border);
+      padding:.45rem 1.1rem;
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--muted); cursor:pointer;
+      transition:border-color .2s, color .2s;
+    }
+    .pager-btn:hover:not(:disabled) { border-color:var(--bone); color:var(--bone); }
+    .pager-btn:disabled { opacity:.25; cursor:default; }
+    .pager-dots { display:flex; align-items:center; gap:.75rem; }
+    .pager-dot {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--border); border:none; padding:0; cursor:pointer;
+      transition:background .2s, transform .25s;
+    }
+    .pager-dot.active { background:var(--ember); transform:scale(1.5); }
+    .pager-count {
+      font-family:'JetBrains Mono',monospace; font-size:10px;
+      letter-spacing:.14em; text-transform:uppercase; color:var(--muted);
+    }
+
     /* ── PROCESS ── */
     #process { background:var(--bg); padding:8rem 3rem; }
     @media(min-width:768px){ #process{ padding:10rem 3rem; } }
@@ -1031,7 +1059,7 @@
     <div class="cell-grid apps-grid">
 
       <!-- /01 Ennea9 — full-width upcoming banner -->
-      <article class="app-card upcoming" style="grid-column:1/-1">
+      <article class="app-card upcoming" data-page="1" style="grid-column:1/-1">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:2rem;position:relative;z-index:1;flex-wrap:wrap">
           <div style="flex:1;min-width:220px">
             <div class="app-tag-row" style="margin-bottom:.75rem">
@@ -1065,7 +1093,7 @@
       </article>
 
       <!-- /02 9 Points of View -->
-      <article class="app-card">
+      <article class="app-card" data-page="1">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <img src="assets/clients/9pov/logo.png" alt="9 Points of View" />
@@ -1092,7 +1120,7 @@
       </article>
 
       <!-- /03 The Ancestor's Essence -->
-      <article class="app-card">
+      <article class="app-card" data-page="1">
         <div class="app-card-top">
           <div class="app-logo-thumb no-bg">
             <img src="assets/clients/ancestors-essence/logo.png" alt="The Ancestor's Essence" />
@@ -1119,7 +1147,7 @@
       </article>
 
       <!-- /04 El Taco Express -->
-      <article class="app-card">
+      <article class="app-card" data-page="1">
         <div class="app-card-top">
           <div class="app-logo-thumb no-bg">
             <img src="assets/clients/eltaco/logo.png" alt="El Taco Express" />
@@ -1146,7 +1174,7 @@
       </article>
 
       <!-- /05 TamilPetti -->
-      <article class="app-card">
+      <article class="app-card" data-page="2">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <span class="app-logo-mono">TP</span>
@@ -1173,7 +1201,7 @@
       </article>
 
       <!-- /06 Four Winds International -->
-      <article class="app-card">
+      <article class="app-card" data-page="2">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <span class="app-logo-mono">FW</span>
@@ -1200,7 +1228,7 @@
       </article>
 
       <!-- /07 RetailEdge Platform -->
-      <article class="app-card">
+      <article class="app-card" data-page="2">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <span class="app-logo-mono">RE</span>
@@ -1227,7 +1255,7 @@
       </article>
 
       <!-- /08 MediPortal 360 -->
-      <article class="app-card">
+      <article class="app-card" data-page="3">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <span class="app-logo-mono">MP</span>
@@ -1254,7 +1282,7 @@
       </article>
 
       <!-- /09 FinAudit Pro -->
-      <article class="app-card">
+      <article class="app-card" data-page="3">
         <div class="app-card-top">
           <div class="app-logo-thumb">
             <span class="app-logo-mono">FA</span>
@@ -1281,13 +1309,26 @@
       </article>
 
       <!-- CTA tile -->
-      <a href="#contact" class="app-cta-card">
+      <a href="#contact" class="app-cta-card" data-page="3">
         <span class="app-cta-label">✦ Your project here</span>
         <h3 class="app-cta-h3">Have an <em>idea</em>?<br>We'll turn it into a live, production-grade product.</h3>
         <span class="app-cta-link">Start a conversation ↗</span>
       </a>
 
     </div>
+
+    <!-- Showcase pagination -->
+    <div class="showcase-pagination" id="showcase-pager">
+      <button class="pager-btn" id="pager-prev" disabled>← Prev</button>
+      <div class="pager-dots" id="pager-dots">
+        <button class="pager-dot active" data-page="1" aria-label="Page 1"></button>
+        <button class="pager-dot" data-page="2" aria-label="Page 2"></button>
+        <button class="pager-dot" data-page="3" aria-label="Page 3"></button>
+      </div>
+      <span class="pager-count" id="pager-count">01 / 03</span>
+      <button class="pager-btn" id="pager-next">Next →</button>
+    </div>
+
   </div>
 </section>
 
@@ -1834,6 +1875,41 @@ document.getElementById('sf-track-pane').style.display = 'none';
     document.getElementById('sf-track-err').classList.remove('show');
     document.getElementById('sf-track-result').classList.remove('show');
   });
+})();
+
+/* ─── SHOWCASE PAGINATION ─────────────────────── */
+(function(){
+  const TOTAL = 3;
+  let cur = 1;
+
+  const grid     = document.querySelector('.apps-grid');
+  const allCards = () => grid.querySelectorAll('[data-page]');
+  const prevBtn  = document.getElementById('pager-prev');
+  const nextBtn  = document.getElementById('pager-next');
+  const countEl  = document.getElementById('pager-count');
+  const dots     = document.querySelectorAll('#pager-dots .pager-dot');
+
+  function pad(n){ return n < 10 ? '0'+n : n; }
+
+  function goTo(page){
+    cur = Math.max(1, Math.min(TOTAL, page));
+
+    allCards().forEach(card => {
+      const p = parseInt(card.dataset.page, 10);
+      card.style.display = p === cur ? (card.tagName === 'A' ? 'flex' : 'flex') : 'none';
+    });
+
+    dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.page, 10) === cur));
+    prevBtn.disabled = cur === 1;
+    nextBtn.disabled = cur === TOTAL;
+    countEl.textContent = pad(cur) + ' / ' + pad(TOTAL);
+  }
+
+  prevBtn.addEventListener('click', () => goTo(cur - 1));
+  nextBtn.addEventListener('click', () => goTo(cur + 1));
+  dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.page, 10))));
+
+  goTo(1);
 })();
 </script>
 </body>
