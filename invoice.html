@@ -472,12 +472,11 @@
         <thead>
           <tr>
             <th style="width:28px">#</th>
-            <th style="min-width:180px">Description of Service</th>
-            <th>SAC Code</th>
+            <th>Description of Service</th>
             <th class="c">Qty</th>
             <th>Unit</th>
-            <th class="r">Rate (₹)</th>
-            <th class="r">Amount (₹)</th>
+            <th class="r">Rate (MYR)</th>
+            <th class="r">Amount (MYR)</th>
           </tr>
         </thead>
         <tbody id="items-body">
@@ -489,7 +488,7 @@
     <!-- ── TOTALS ── -->
     <div class="totals-wrap">
       <div class="words-cell">
-        <div class="words-label">Amount in Words (INR)</div>
+        <div class="words-label">Amount in Words (MYR)</div>
         <div class="words-val" id="amount-words">—</div>
       </div>
       <div class="totals-cell">
@@ -530,8 +529,7 @@
       1. Payment is due within 30 days from the invoice date unless otherwise agreed in writing.
       &nbsp;&nbsp;2. Late payments attract interest at 1.5% per month.
       &nbsp;&nbsp;3. All disputes subject to exclusive jurisdiction of courts in Tamil Nadu, India.
-      &nbsp;&nbsp;4. GST as applicable is charged separately and is the responsibility of the recipient.
-      &nbsp;&nbsp;5. Services rendered are subject to the Master Service Agreement / SOW signed between both parties.
+      &nbsp;&nbsp;4. Services rendered are subject to the Master Service Agreement / SOW signed between both parties.
     </div>
   </div>
 
@@ -558,31 +556,17 @@ const INVOICE = {
   pos:    'Malaysia',
   items: [
     {
-      desc: 'Web Application Development — Custom full-stack platform with React frontend, Node.js backend, and PostgreSQL database.',
-      sac:  '998314',
-      qty:  1,
-      unit: 'Project',
-      rate: 50000.00
-    },
-    {
-      desc: 'API Integration Services — Third-party payment gateway, SMS, and email API integration.',
-      sac:  '998313',
-      qty:  10,
-      unit: 'Hours',
-      rate: 2500.00
-    },
-    {
-      desc: 'Monthly Hosting, Maintenance &amp; Technical Support — Cloud infrastructure, uptime monitoring, and SLA-backed support.',
-      sac:  '998315',
+      desc: 'Digital Ocean Servers — Monthly Hosting Charges (June 2026)',
+      note: 'USD 58.32 equivalent',
       qty:  1,
       unit: 'Month',
-      rate: 8000.00
+      rate: 231.55
     }
   ]
 };
 
 /* ─────────────── RENDER ROWS ─────────────── */
-function inr(n){ return '₹' + n.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function fmt(n){ return 'MYR ' + n.toLocaleString('en-MY', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
 function renderItems(){
   const tbody = document.getElementById('items-body');
@@ -598,30 +582,29 @@ function renderItems(){
         <td><span class="sno">${String(i+1).padStart(2,'0')}</span></td>
         <td>
           <div class="item-desc">${item.desc}</div>
-          <div class="item-sac">SAC: ${item.sac}</div>
+          ${item.note ? `<div class="item-sac">${item.note}</div>` : ''}
         </td>
-        <td><span class="mono-val">${item.sac}</span></td>
         <td class="c"><span class="mono-val">${item.qty}</span></td>
         <td>${item.unit}</td>
-        <td class="r"><span class="mono-val">${inr(item.rate)}</span></td>
-        <td class="r"><span class="mono-val" style="font-weight:600">${inr(amount)}</span></td>
+        <td class="r"><span class="mono-val">${fmt(item.rate)}</span></td>
+        <td class="r"><span class="mono-val" style="font-weight:600">${fmt(amount)}</span></td>
       </tr>`;
   });
 
   tbody.innerHTML = rows;
 
-  const grandRounded = Math.round(subtotal);
+  const grandRounded = parseFloat(subtotal.toFixed(2));
   const rounding     = grandRounded - subtotal;
 
-  document.getElementById('tot-taxable').textContent = inr(subtotal);
+  document.getElementById('tot-taxable').textContent = fmt(subtotal);
   document.getElementById('tot-round').textContent   = rounding === 0 ? '—' : (rounding > 0 ? '+' : '') + rounding.toFixed(2);
-  document.getElementById('tot-grand').textContent   = inr(grandRounded);
+  document.getElementById('tot-grand').textContent   = fmt(grandRounded);
   document.getElementById('amount-words').textContent = toWords(grandRounded) + ' Only';
 }
 
 /* ─────────────── NUMBER TO WORDS ─────────────── */
 function toWords(n){
-  if(n === 0) return 'Zero Rupees';
+  if(n === 0) return 'Zero Ringgit';
   const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine',
     'Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen',
     'Seventeen','Eighteen','Nineteen'];
@@ -641,9 +624,9 @@ function toWords(n){
   if(rem >= 1000)    { str += convertGroup(Math.floor(rem/1000))     + 'Thousand '; rem %= 1000;   }
   str += convertGroup(rem);
 
-  const paise = Math.round((n - Math.floor(n)) * 100);
-  let result = 'INR ' + str.trim() + ' Rupees';
-  if(paise > 0) result += ' and ' + convertGroup(paise).trim() + ' Paise';
+  const sen = Math.round((n - Math.floor(n)) * 100);
+  let result = 'MYR ' + str.trim() + ' Ringgit';
+  if(sen > 0) result += ' and ' + convertGroup(sen).trim() + ' Sen';
   return result;
 }
 
