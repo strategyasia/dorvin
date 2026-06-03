@@ -390,7 +390,6 @@
       <div class="brand-tagline">IT Services &amp; Software Development · Since 2005</div>
       <div class="brand-tags">
         <span class="brand-tag">ISO Certified</span>
-        <span class="brand-tag">GST Registered</span>
         <span class="brand-tag">Pvt Ltd</span>
       </div>
     </div>
@@ -418,8 +417,6 @@
           India
         </div>
         <div class="party-meta">
-          <div class="pmr"><span class="pmr-k">GSTIN</span><span class="pmr-v">33XXXXX0000X1ZX</span></div>
-          <div class="pmr"><span class="pmr-k">PAN</span><span class="pmr-v">XXXXX0000X</span></div>
           <div class="pmr"><span class="pmr-k">CIN</span><span class="pmr-v">U62099TN2023PTC158997</span></div>
           <div class="pmr"><span class="pmr-k">Email</span><span class="pmr-v">ceo@dorvin.in</span></div>
           <div class="pmr"><span class="pmr-k">Web</span><span class="pmr-v">dorvin.in</span></div>
@@ -467,8 +464,8 @@
         <div class="imc-v" id="meta-pos">Tamil Nadu (33)</div>
       </div>
       <div class="imc">
-        <div class="imc-k">Reverse Charge</div>
-        <div class="imc-v">No</div>
+        <div class="imc-k">GST</div>
+        <div class="imc-v">Not Applicable</div>
       </div>
     </div>
 
@@ -478,15 +475,12 @@
         <thead>
           <tr>
             <th style="width:28px">#</th>
-            <th style="min-width:140px">Description of Service</th>
+            <th style="min-width:180px">Description of Service</th>
             <th>SAC Code</th>
             <th class="c">Qty</th>
             <th>Unit</th>
             <th class="r">Rate (₹)</th>
-            <th class="r">Taxable Value (₹)</th>
-            <th class="r">CGST<br><span style="font-size:7.5px;opacity:.65">9%</span></th>
-            <th class="r">SGST<br><span style="font-size:7.5px;opacity:.65">9%</span></th>
-            <th class="r">Total (₹)</th>
+            <th class="r">Amount (₹)</th>
           </tr>
         </thead>
         <tbody id="items-body">
@@ -503,23 +497,15 @@
       </div>
       <div class="totals-cell">
         <div class="trow">
-          <span class="trow-label">Taxable Amount</span>
+          <span class="trow-label">Sub Total</span>
           <span class="trow-val" id="tot-taxable">₹0.00</span>
         </div>
         <div class="trow">
-          <span class="trow-label">CGST @ 9%</span>
-          <span class="trow-val" id="tot-cgst">₹0.00</span>
-        </div>
-        <div class="trow">
-          <span class="trow-label">SGST @ 9%</span>
-          <span class="trow-val" id="tot-sgst">₹0.00</span>
-        </div>
-        <div class="trow" style="border-top:1px solid var(--border)">
           <span class="trow-label">Rounding Off</span>
-          <span class="trow-val" id="tot-round">₹0.00</span>
+          <span class="trow-val" id="tot-round">—</span>
         </div>
         <div class="trow grand">
-          <span class="trow-label">Grand Total</span>
+          <span class="trow-label">Total Amount</span>
           <span class="trow-val" id="tot-grand">₹0.00</span>
         </div>
       </div>
@@ -571,18 +557,16 @@
     </div>
   </div>
 
-  <!-- ── REVERSE CHARGE NOTE ── -->
+  <!-- ── NOTE ── -->
   <div class="rc-note">
-    <strong>Note on Reverse Charge:</strong> Tax on this supply is not payable on reverse charge basis.
-    &nbsp;&nbsp;&nbsp;
-    <strong>E-Invoice:</strong> IRN / QR Code to be affixed upon generation from the IRP portal (applicable if turnover &gt; ₹5 Cr).
+    <strong>Note:</strong> This is a non-GST invoice. Dorvin Infotech Pvt Ltd is not currently registered under GST.
+    No tax is charged on this invoice.
   </div>
 
   <!-- ── FOOTER STRIP ── -->
   <div class="inv-foot-strip">
     <span>Dorvin Infotech Pvt Ltd · CIN: U62099TN2023PTC158997</span>
     <span class="em">dorvin.in · ceo@dorvin.in</span>
-    <span>GSTIN: 33XXXXX0000X1ZX</span>
   </div>
 
 </div><!-- /page -->
@@ -590,34 +574,31 @@
 <script>
 /* ─────────────── INVOICE DATA ─────────────── */
 const INVOICE = {
-  number:  'INV-2526-001',
-  date:    '03/06/2026',
-  due:     '03/07/2026',
-  pos:     'Tamil Nadu (33)',
-  cgstPct: 9,   // change to 0 and set igstPct:18 for inter-state
-  sgstPct: 9,
-  igstPct: 0,
+  number: 'INV-2526-001',
+  date:   '03/06/2026',
+  due:    '03/07/2026',
+  pos:    'Tamil Nadu',
   items: [
     {
-      desc:   'Web Application Development — Custom full-stack platform with React frontend, Node.js backend, and PostgreSQL database.',
-      sac:    '998314',
-      qty:    1,
-      unit:   'Project',
-      rate:   50000.00
+      desc: 'Web Application Development — Custom full-stack platform with React frontend, Node.js backend, and PostgreSQL database.',
+      sac:  '998314',
+      qty:  1,
+      unit: 'Project',
+      rate: 50000.00
     },
     {
-      desc:   'API Integration Services — Third-party payment gateway, SMS, and email API integration.',
-      sac:    '998313',
-      qty:    10,
-      unit:   'Hours',
-      rate:   2500.00
+      desc: 'API Integration Services — Third-party payment gateway, SMS, and email API integration.',
+      sac:  '998313',
+      qty:  10,
+      unit: 'Hours',
+      rate: 2500.00
     },
     {
-      desc:   'Monthly Hosting, Maintenance &amp; Technical Support — Cloud infrastructure, uptime monitoring, and SLA-backed support.',
-      sac:    '998315',
-      qty:    1,
-      unit:   'Month',
-      rate:   8000.00
+      desc: 'Monthly Hosting, Maintenance &amp; Technical Support — Cloud infrastructure, uptime monitoring, and SLA-backed support.',
+      sac:  '998315',
+      qty:  1,
+      unit: 'Month',
+      rate: 8000.00
     }
   ]
 };
@@ -628,19 +609,11 @@ function inr(n){ return '₹' + n.toLocaleString('en-IN', {minimumFractionDigits
 function renderItems(){
   const tbody = document.getElementById('items-body');
   let rows = '';
-  let totalTaxable = 0;
-  let totalCgst    = 0;
-  let totalSgst    = 0;
+  let subtotal = 0;
 
   INVOICE.items.forEach((item, i) => {
-    const taxable = item.qty * item.rate;
-    const cgst    = taxable * INVOICE.cgstPct / 100;
-    const sgst    = taxable * INVOICE.sgstPct / 100;
-    const total   = taxable + cgst + sgst;
-
-    totalTaxable += taxable;
-    totalCgst    += cgst;
-    totalSgst    += sgst;
+    const amount = item.qty * item.rate;
+    subtotal += amount;
 
     rows += `
       <tr>
@@ -653,23 +626,17 @@ function renderItems(){
         <td class="c"><span class="mono-val">${item.qty}</span></td>
         <td>${item.unit}</td>
         <td class="r"><span class="mono-val">${inr(item.rate)}</span></td>
-        <td class="r"><span class="mono-val">${inr(taxable)}</span></td>
-        <td class="r"><span class="mono-val">${inr(cgst)}</span></td>
-        <td class="r"><span class="mono-val">${inr(sgst)}</span></td>
-        <td class="r"><span class="mono-val" style="font-weight:600">${inr(total)}</span></td>
+        <td class="r"><span class="mono-val" style="font-weight:600">${inr(amount)}</span></td>
       </tr>`;
   });
 
   tbody.innerHTML = rows;
 
-  const grandExact = totalTaxable + totalCgst + totalSgst;
-  const grandRounded = Math.round(grandExact);
-  const rounding = grandRounded - grandExact;
+  const grandRounded = Math.round(subtotal);
+  const rounding     = grandRounded - subtotal;
 
-  document.getElementById('tot-taxable').textContent = inr(totalTaxable);
-  document.getElementById('tot-cgst').textContent    = inr(totalCgst);
-  document.getElementById('tot-sgst').textContent    = inr(totalSgst);
-  document.getElementById('tot-round').textContent   = (rounding >= 0 ? '+' : '') + rounding.toFixed(2);
+  document.getElementById('tot-taxable').textContent = inr(subtotal);
+  document.getElementById('tot-round').textContent   = rounding === 0 ? '—' : (rounding > 0 ? '+' : '') + rounding.toFixed(2);
   document.getElementById('tot-grand').textContent   = inr(grandRounded);
   document.getElementById('amount-words').textContent = toWords(grandRounded) + ' Only';
 }
