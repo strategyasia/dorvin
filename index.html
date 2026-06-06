@@ -284,7 +284,9 @@
     .svc-grid { grid-template-columns:1fr; }
     @media(min-width:640px){ .svc-grid{ grid-template-columns:repeat(2,1fr); } }
     @media(min-width:1024px){ .svc-grid{ grid-template-columns:repeat(3,1fr); } }
-    .svc-card { position:relative; display:flex; flex-direction:column; padding:2rem 1.75rem; transition:background .25s; overflow:hidden; }
+    .svc-card { position:relative; display:flex; flex-direction:column; padding:2rem 1.75rem; transition:background .25s; overflow:hidden; text-decoration:none; color:inherit; }
+    .svc-card, .svc-card:hover, .svc-card:focus, .svc-card:visited { text-decoration:none; }
+    .svc-card * { text-decoration:none; }
     .svc-card::before { content:''; position:absolute; inset-x:0; top:0; height:1px; background:linear-gradient(to right,transparent,var(--ember),transparent); opacity:0; transition:opacity .4s; }
     .svc-card:hover { background:var(--bg) !important; }
     .svc-card:hover::before { opacity:1; }
