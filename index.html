@@ -279,6 +279,29 @@
     .services-head-left { max-width:42rem; }
     .services-head p.sub { margin-top:1.5rem; font-size:1.125rem; color:var(--muted); max-width:32rem; }
     .services-meta { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
+
+    /* ── COMPACT SERVICES GRID ── */
+    .svc-grid { grid-template-columns:1fr; }
+    @media(min-width:640px){ .svc-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(min-width:1024px){ .svc-grid{ grid-template-columns:repeat(3,1fr); } }
+    .svc-card { position:relative; display:flex; flex-direction:column; padding:2rem 1.75rem; transition:background .25s; overflow:hidden; }
+    .svc-card::before { content:''; position:absolute; inset-x:0; top:0; height:1px; background:linear-gradient(to right,transparent,var(--ember),transparent); opacity:0; transition:opacity .4s; }
+    .svc-card:hover { background:var(--bg) !important; }
+    .svc-card:hover::before { opacity:1; }
+    .svc-card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:1.5rem; }
+    .svc-icon-box { display:grid; place-items:center; width:3rem; height:3rem; border:1px solid var(--border); background:hsla(240,5%,13%,.5); transition:border-color .3s; flex-shrink:0; }
+    .svc-card:hover .svc-icon-box { border-color:hsla(28,70%,58%,.5); }
+    .svc-icon-box svg { width:22px; height:22px; stroke:var(--ember); fill:none; stroke-width:1.4; }
+    .svc-num { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.1em; color:var(--muted); }
+    .svc-title { font-family:'Instrument Serif',serif; font-size:1.4rem; line-height:1.1; color:var(--bone); margin-bottom:.6rem; }
+    .svc-blurb { font-size:.85rem; line-height:1.6; color:var(--muted); flex:1; }
+    .svc-tags { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:1.25rem; }
+    .svc-tag { border:1px solid var(--border); padding:.2rem .55rem; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--steel); transition:border-color .3s; }
+    .svc-card:hover .svc-tag { border-color:hsla(28,70%,58%,.3); }
+    .svc-foot { display:flex; align-items:baseline; gap:.6rem; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--border); }
+    .svc-stat { font-family:'Instrument Serif',serif; font-size:1.75rem; line-height:1; color:var(--ember); flex-shrink:0; }
+    .svc-stat-label { font-size:.7rem; line-height:1.4; color:var(--muted); }
+
     .acc-list { border-top:1px solid var(--border); }
     .acc-item { border-bottom:1px solid var(--border); }
     .acc-trigger {
@@ -876,8 +899,8 @@
       <p class="services-meta">SERIES / 09 CAPABILITIES</p>
     </div>
 
-    <div class="acc-list" id="acc-list">
-      <!-- items injected by JS -->
+    <div class="cell-grid svc-grid" id="svc-grid">
+      <!-- service cards injected by JS -->
     </div>
   </div>
 </section>
@@ -1704,63 +1727,34 @@ drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => draw
   render();
 })();
 
-/* ─── SERVICES ACCORDION ─────────────────────── */
+/* ─── SERVICES GRID ──────────────────────────── */
 const services = [
-  { num:"01", title:"Full-Stack Development", blurb:"Complete development across UI, backend, and database layers — built to scale from day one.", tags:["MEAN","MERN","Java","React","Next.js"], included:["Architecture design & tech stack selection","Frontend development (React, Next.js, Vue)","Backend APIs, microservices & database design","Performance optimisation & code reviews","Post-launch support & iterative improvements"], stat:"35%", statLabel:"faster time-to-market vs. building in-house" },
-  { num:"02", title:"Custom Software Development", blurb:"Web, mobile, and desktop apps tailored to your exact workflows — not retrofitted from a template.", tags:["Web Apps","Mobile","Desktop","Cross-platform"], included:["Requirements analysis & UX/UI design","Web, iOS, Android & cross-platform development","Third-party API & system integrations","QA testing & user acceptance testing","Ongoing maintenance & feature rollouts"], stat:"100%", statLabel:"of projects delivered within agreed scope" },
-  { num:"03", title:"AI, ML & Emerging Technologies", blurb:"Harness AI, Machine Learning, Blockchain & IoT to build capabilities your competitors don't have.", tags:["Machine Learning","Blockchain","IoT","Computer Vision"], included:["AI strategy, feasibility & ROI consulting","Custom model development & training","Production deployment & real-time inference","Blockchain smart contracts & IoT integration","Ongoing model monitoring & optimisation"], stat:"60%", statLabel:"average reduction in manual processing time" },
-  { num:"04", title:"Data & AI Services", blurb:"Turn raw data into your most valuable asset with end-to-end pipelines, analytics & AI models.", tags:["Data Engineering","Analytics","BI","MLOps"], included:["Data pipeline design, ingestion & transformation","Real-time analytics dashboards & BI reporting","Predictive model development & deployment","MLOps infrastructure & model lifecycle management","Data governance, security & compliance"], stat:"10×", statLabel:"faster insight generation vs. manual reporting" },
-  { num:"05", title:"DevOps & CI/CD", blurb:"Automate your build, test & deploy pipeline — ship faster and break less with every release.", tags:["Docker","Kubernetes","Terraform","AWS"], included:["CI/CD pipeline design, setup & automation","Infrastructure-as-code (Terraform, Ansible)","Container orchestration with Docker & Kubernetes","Automated security scanning & compliance checks","Monitoring, alerting & incident response setup"], stat:"10×", statLabel:"more frequent deploys with fewer incidents" },
-  { num:"06", title:"Managed IT Services", blurb:"24×7 monitoring, proactive maintenance & a help desk that keeps your business running.", tags:["24/7 Monitoring","Help Desk","Proactive Maintenance"], included:["24×7 infrastructure & application monitoring","Proactive issue detection & rapid resolution","Dedicated help desk with SLA-backed response times","Security patching & vulnerability management","Monthly health & performance reports"], stat:"99.9%", statLabel:"uptime SLA across all managed environments" },
-  { num:"07", title:"Enterprise Software", blurb:"Scalable ERP, CRM & SCM platforms that integrate organisation-wide and eliminate bottlenecks.", tags:["ERP","CRM","SCM","SAP","Integration"], included:["Business process analysis & solution mapping","ERP, CRM & SCM implementation & configuration","Legacy system & third-party integrations","Role-based access control & data security","Staff training, documentation & change management"], stat:"28%", statLabel:"average operational efficiency improvement" },
-  { num:"08", title:"QA & Software Testing", blurb:"Comprehensive QA from unit tests to security audits — your product is bulletproof before it ships.", tags:["Test Automation","Performance","Security Audit","Cypress"], included:["Test strategy design & planning","Automated test suite development (Selenium, Cypress)","Performance, load & stress testing","Security vulnerability assessment & penetration testing","Defect reporting, triage & regression testing"], stat:"95%", statLabel:"of critical bugs caught before production" },
-  { num:"09", title:"Legacy Modernisation", blurb:"Migrate ageing systems to cloud-native, API-first architecture — zero downtime, zero disruption.", tags:["Microservices","Cloud Migration","API-first"], included:["Full system audit & modernisation roadmap","Phased migration with zero-downtime strategy","Microservices decomposition & API layer development","Cloud infrastructure setup & cost optimisation","Staff training, runbooks & full documentation"], stat:"50%", statLabel:"average reduction in infrastructure costs" },
+  { num:"01", title:"Full-Stack Development", blurb:"Complete development across UI, backend, and database layers — built to scale from day one.", tags:["React","Next.js","Node","Java"], stat:"35%", statLabel:"faster time-to-market", icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>' },
+  { num:"02", title:"Custom Software Development", blurb:"Web, mobile, and desktop apps tailored to your exact workflows — not retrofitted from a template.", tags:["Web","Mobile","Cross-platform"], stat:"100%", statLabel:"delivered within scope", icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>' },
+  { num:"03", title:"AI, ML & Emerging Tech", blurb:"Harness AI, Machine Learning, Blockchain & IoT to build capabilities your competitors don't have.", tags:["ML","Computer Vision","IoT"], stat:"60%", statLabel:"less manual processing", icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/>' },
+  { num:"04", title:"Data & AI Services", blurb:"Turn raw data into your most valuable asset with end-to-end pipelines, analytics & AI models.", tags:["Analytics","BI","MLOps"], stat:"10×", statLabel:"faster insights", icon:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>' },
+  { num:"05", title:"DevOps & CI/CD", blurb:"Automate your build, test & deploy pipeline — ship faster and break less with every release.", tags:["Docker","Kubernetes","AWS"], stat:"10×", statLabel:"more frequent deploys", icon:'<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>' },
+  { num:"06", title:"Managed IT Services", blurb:"24×7 monitoring, proactive maintenance & a help desk that keeps your business running.", tags:["24/7 Monitoring","Help Desk"], stat:"99.9%", statLabel:"uptime SLA", icon:'<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' },
+  { num:"07", title:"Enterprise Software", blurb:"Scalable ERP, CRM & SCM platforms that integrate organisation-wide and eliminate bottlenecks.", tags:["ERP","CRM","SAP"], stat:"28%", statLabel:"efficiency gain", icon:'<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><line x1="9" y1="9" x2="9" y2="9"/><line x1="9" y1="13" x2="9" y2="13"/>' },
+  { num:"08", title:"QA & Software Testing", blurb:"Comprehensive QA from unit tests to security audits — your product is bulletproof before it ships.", tags:["Automation","Security","Cypress"], stat:"95%", statLabel:"bugs caught pre-prod", icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+  { num:"09", title:"Legacy Modernisation", blurb:"Migrate ageing systems to cloud-native, API-first architecture — zero downtime, zero disruption.", tags:["Microservices","Cloud","API-first"], stat:"50%", statLabel:"lower infra costs", icon:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>' },
 ];
 
-const accList = document.getElementById('acc-list');
-let openNum = '01';
-
-function renderAcc(){
-  accList.innerHTML = services.map(s => {
-    const isOpen = openNum === s.num;
-    return `<div class="acc-item${isOpen?' open':''}" data-num="${s.num}">
-      <button class="acc-trigger" data-num="${s.num}">
-        <span class="acc-num mono">${s.num}</span>
-        <span class="acc-title">${s.title}</span>
-        <span class="acc-preview">${s.blurb.slice(0,60)}…</span>
-        <span class="acc-icon">${isOpen
-          ? '<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>'
-          : '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
-        }</span>
-      </button>
-      <div class="acc-body${isOpen?' open':''}">
-        <div class="acc-spacer"></div>
-        <div>
-          <p class="acc-detail-blurb">${s.blurb}</p>
-          <div class="acc-tags">${s.tags.map(t=>`<span class="acc-tag">${t}</span>`).join('')}</div>
-          <p class="acc-included-label">What's included</p>
-          <ul class="acc-included">${s.included.map(i=>`<li><span>${i}</span></li>`).join('')}</ul>
-        </div>
-        <div>
-          <div class="acc-stat-box">
-            <p class="acc-stat-num">${s.stat}</p>
-            <p class="acc-stat-label">${s.statLabel}</p>
-            <a href="#contact" class="acc-stat-link">Request estimate →</a>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  accList.querySelectorAll('.acc-trigger').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const n = btn.dataset.num;
-      openNum = openNum === n ? null : n;
-      renderAcc();
-    });
-  });
-}
-renderAcc();
+const svcGrid = document.getElementById('svc-grid');
+svcGrid.innerHTML = services.map(s => `
+  <a href="#contact" class="svc-card">
+    <div class="svc-card-top">
+      <div class="svc-icon-box"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${s.icon}</svg></div>
+      <span class="svc-num">${s.num}</span>
+    </div>
+    <h3 class="svc-title">${s.title}</h3>
+    <p class="svc-blurb">${s.blurb}</p>
+    <div class="svc-tags">${s.tags.map(t=>`<span class="svc-tag">${t}</span>`).join('')}</div>
+    <div class="svc-foot">
+      <span class="svc-stat">${s.stat}</span>
+      <span class="svc-stat-label">${s.statLabel}</span>
+    </div>
+  </a>`).join('');
 
 /* ─── CONTACT FORM ───────────────────────────── */
 document.getElementById('contact-submit').addEventListener('click', async function(){
