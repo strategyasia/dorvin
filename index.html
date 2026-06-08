@@ -567,8 +567,15 @@
     @media(min-width:768px){ #process{ padding:10rem 3rem; } }
     .process-wrap { max-width:1440px; margin:0 auto; }
     .process-grid { display:grid; grid-template-columns:1fr; gap:3rem; }
-    @media(min-width:1024px){ .process-grid{ grid-template-columns:5fr 6fr; gap:3rem; } }
-    .process-left-sub { margin-top:1.5rem; font-size:1.125rem; color:var(--muted); }
+    @media(min-width:1024px){ .process-grid{ grid-template-columns:5fr 7fr; gap:4rem; align-items:center; } }
+    .process-left-sub { margin-top:1.5rem; font-size:1.125rem; color:var(--muted); line-height:1.7; }
+    .process-points { margin-top:2.5rem; display:flex; flex-direction:column; gap:1rem; }
+    .process-point { display:flex; align-items:flex-start; gap:.85rem; font-size:.9rem; color:var(--steel); }
+    .process-point svg { width:18px; height:18px; stroke:var(--ember); fill:none; stroke-width:1.5; flex-shrink:0; margin-top:.1rem; }
+    .process-cta { display:inline-flex; align-items:center; gap:.75rem; margin-top:2.5rem; border:1px solid var(--bone); background:var(--bone); padding:1rem 1.75rem; font-size:11px; font-weight:700; letter-spacing:0.24em; text-transform:uppercase; color:var(--bg); text-decoration:none; transition:background .3s, color .3s; align-self:flex-start; }
+    .process-cta:hover { background:transparent; color:var(--bone); }
+    .process-cta .arrow { transition:transform .2s; }
+    .process-cta:hover .arrow { transform:translateX(4px); }
     .steps-list { display:flex; flex-direction:column; gap:1px; border:1px solid var(--border); background:var(--border); }
     .step { display:grid; grid-template-columns:3rem 1fr; gap:1.5rem; background:var(--bg); padding:2rem; }
     .step-num { font-family:'JetBrains Mono',monospace; font-size:.75rem; color:var(--ember); padding-top:.25rem; }
@@ -1361,10 +1368,25 @@
 <section id="process">
   <div class="process-wrap">
     <div class="process-grid">
-      <div>
+      <div style="display:flex;flex-direction:column">
         <p class="eyebrow" style="margin-bottom:1.5rem">— How it works</p>
         <h2 class="section-h2">From brief to launch — a <em>clear</em> process.</h2>
-        <p class="process-left-sub">No ambiguity. No surprises. Just a reliable path from idea to delivery.</p>
+        <p class="process-left-sub">No ambiguity. No surprises. Just a reliable path from idea to delivery — with you in the loop at every step.</p>
+        <div class="process-points">
+          <div class="process-point">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Fixed, agreed scope before any code is written</span>
+          </div>
+          <div class="process-point">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Regular demos &amp; sprint updates — never left in the dark</span>
+          </div>
+          <div class="process-point">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Full code ownership &amp; documentation handed over</span>
+          </div>
+        </div>
+        <a href="#contact" class="process-cta"><span>Start your project</span><span class="arrow">→</span></a>
       </div>
       <div>
         <div class="steps-list">
